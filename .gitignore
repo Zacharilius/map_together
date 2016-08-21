@@ -1,0 +1,16 @@
+# Project
+todo.txt
+static/lib
+
+# VirtualEnv
+venv/
+
+# Python
+*.pyc
+
+# Django
+db.sqlite3
+settings.py
+
+# Node
+node_modules/
