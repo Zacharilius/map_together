@@ -1,0 +1,46 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="A Site for Sharing and Creating Maps Together">
+    <meta name="author" content="Zachary Bensley">
+    <link rel="icon" href="">
+
+    <title>MapTogether</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.css' %}" />
+    
+    <!-- Page CSS -->
+    {% block page_css %}
+      
+    {% endblock %}
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          {% block content %}
+            
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script type="text/javascript" src="{% static 'jquery/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tether/tether.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    
+    <!-- Page JS -->
+    {% block page_js %}
+      
+    {% endblock %}
+  </body>
+</html>

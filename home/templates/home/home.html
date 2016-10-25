@@ -1,0 +1,17 @@
+{% extends "base_page.html" %}
+
+{% load staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/home.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+    <h1>MapTogether</h1>
+
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'home/home.js' %}"></script>
+{% endblock %}
