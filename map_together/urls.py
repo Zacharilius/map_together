@@ -17,6 +17,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'map-room/^', include('map_room.urls')),
     url(r'^', include('home.urls')),
+    url(r'^map-room/', include('map_room.urls')),
 ]

@@ -1,0 +1,19 @@
+{% extends "base_page.html" %}
+
+{% load staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'map_room/map_room.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <div class="map-room-container">
+        <div id="map-room-map">
+        </div>
+        <h1 id="map-room-long-lat"></h1>
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'map_room/map_room.js' %}"></script>
+{% endblock %}
