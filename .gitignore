@@ -1,6 +1,5 @@
 # Project
 todo.txt
-static/lib
 
 # VirtualEnv
 venv/
@@ -10,7 +9,7 @@ venv/
 
 # Django
 db.sqlite3
-settings.py
+settings_local.py
 
 # Node
 node_modules/
