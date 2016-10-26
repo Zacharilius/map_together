@@ -33,6 +33,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     
+    # 3rd Party Apps
+    'channels',
+    
     # Project Apps
     'home',
     'map_room',

@@ -1,8 +1,10 @@
 var MapRoom = function() {
     this.init = function() {
         setupMap();
+        setupWebSocket();
     }
     
+    /* Leaflet Map */
     var setupMap = function() {
         var mapRoom = L.map('map-room-map').setView([47.6062, -122.3321], 13);
 
@@ -13,6 +15,8 @@ var MapRoom = function() {
             accessToken: 'pk.eyJ1IjoiemFjaGFyaWxpdXMiLCJhIjoiY2l1cHU4eGk4MDFsazNvcGh4dzRnZWU0NSJ9.pIC-kFg6gpOpA-s0to0C0g'
         }).addTo(mapRoom);
     }
+    
+    /* Location */
     
     var getGeoLocation= function() {
         if (navigator.geolocation) {
@@ -27,6 +31,17 @@ var MapRoom = function() {
         "<br>Longitude: " + position.coords.longitude); 
     }
     
+    /* Web Socket */
+    var setupWebSocket = function() {
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        window.map_room_ws = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname);
+    }
+    
+    var sendWebSocketMessage = function(message) {
+        window.map_room_ws.send(JSON.stringify(message));
+    }
+    
+    /* Init */
     this.init();
 }
 

@@ -48,6 +48,9 @@
     <script type="text/javascript" src="{% static 'tether/tether.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
     
+    <!-- Reconnecting Websocket JS -->
+    <script type="text/javascript" src="{% static 'reconnecting_websocket/reconnecting_websocket.min.js' %}"></script>
+
     <!-- Leaflet JS -->
     <script type="text/javascript" src="{% static 'leaflet/leaflet.js' %}"></script>
     
@@ -55,5 +58,7 @@
     {% block page_js %}
       
     {% endblock %}
+    
+    <div id="csrf-token" style="display: none;">{% csrf_token %}</div>
   </body>
 </html>

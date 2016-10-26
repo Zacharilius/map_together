@@ -1,0 +1,47 @@
+{% extends "base_page.html" %}
+
+{% load staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'map_room/join_map_room.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="map-room-radio-container">
+    <label class="form-check-inline">
+        <input class="form-check-input" type="radio" name="newOrJoinMapRoom" id="map-room-radio-new" value="new">
+        New MapRoom
+    </label>
+    <label class="form-check-inline">
+        <input class="form-check-input" type="radio" name="newOrJoinMapRoom" id="map-room-radio-join" value="join">
+        Join MapRoom
+    </label>
+</div>
+<div class="map-room-selection-container">
+    <div id="map-room-new-container">
+        <div class="form-group row">
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-6">
+                <input class="form-control"  maxlength="50" type="text" value="room-name" id="map-room-room-name">
+            </div>
+            <div class="col-xs-12 map-room-button-container">
+                <input id="map-room-new-haiku-name-button" class="btn btn-primary" type="button" value="New Name" />
+                <input id="map-room-new-submit-button" class="btn btn-primary" type="button" value="Submit" />
+            </div>
+        </div>
+    </div>
+    <div id="map-room-join-container">
+        <h3>Public Rooms</h3>
+        <a href="/map-room/room/room-name">room-name</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block page_js %}
+    <script>
+        var allMapRooms = {{ all_map_rooms }};
+    </script>
+    
+    <script type="text/javascript" src="{% static 'map_room/join_map_room.js' %}"></script>
+{% endblock %}
