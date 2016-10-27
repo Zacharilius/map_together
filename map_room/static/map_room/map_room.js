@@ -16,7 +16,7 @@ var MapRoom = function() {
         }).addTo(mapRoom);
     }
     
-    /* Leaflet Map Sync */
+    /* ==== Leaflet Map Sync ==== */
     /* Will not sync local action while processing sync from server */
     var syncInProgress = false;
     
@@ -47,6 +47,9 @@ var MapRoom = function() {
             case 'pan':
                 performPanAction(data);
                 break;
+            case 'zoom':
+                performZoomAction(data);
+                break;
             default:
                 console.warn('Unrecognized action: ' + action);
         }
@@ -57,9 +60,12 @@ var MapRoom = function() {
         var message = {
             'action': 'pan',
             'mapCenter': e.target.getCenter()
-        }
+        };
+        
+        console.log('sending pan request');
         
         sendWebSocketMessage(message);
+        L.DomEvent.preventDefault(e);
     });
     
     var performPanAction = function(data) {
@@ -67,10 +73,35 @@ var MapRoom = function() {
         current_map_center = mapRoom.getCenter();
         
         if (new_map_center['lat'] != current_map_center['lat'] || new_map_center['lng'] != current_map_center['lng']) {
-            mapRoom.setView(data['mapCenter']);
+            console.log('performing requested pan');
+            mapRoom.setView(new_map_center);
         } else {
             /* Already at map center so no need to sync */
-            /* Do Nothing */
+        }
+    }
+    
+    /* Zoom Sync */
+    mapRoom.on('zoomend', function(e) {
+        var message = {
+            'action': 'zoom',
+            'zoomLevel': e.target.getZoom()
+        };
+        console.log('sending zoom request');
+        
+        sendWebSocketMessage(message);
+        L.DomEvent.preventDefault(e);
+    })
+    
+    var performZoomAction = function(data) {
+        console.log('zooming');
+        new_map_zoom = data['zoomLevel'];
+        current_map_center = mapRoom.getZoom();
+        
+        if (new_map_zoom != current_map_center) {
+            console.log('performing requested zoom');
+            mapRoom.setZoom(new_map_zoom);
+        } else {
+            /* Already at correct zoom so no need to sync */
         }
     }
     
