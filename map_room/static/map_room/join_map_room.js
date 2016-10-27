@@ -41,7 +41,8 @@ var JoinMapRoom = function() {
                     'mapRoomName': mapRoomName
                 },
                 success: function(data) {
-                    window.open(data['map_room_url']);
+                    /* Go to map room */
+                    window.location = data['map_room_url'];
                 },
                 error: function(e) {
                     console.error(e.message);

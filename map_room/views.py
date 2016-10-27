@@ -27,11 +27,11 @@ def create_map_room(request):
 
     response_data = {
         'created': created,
-        'map_room_url': map_room.get_absolute_url()
+        'map_room_url': map_room.get_absolute_url(),
     }
 
     return HttpResponse(
-        json.dumps(response_data),
+        mark_safe(json.dumps(response_data)),
         content_type="application/json"
     )
 
