@@ -23,7 +23,10 @@ def ws_receive(message, map_room):
     room = MapRoom.objects.get(label=label)
     data = json.loads(message['text'])
     
-    # TODO: Store current map state in Group Info.
+    room.center_lng = data['mapCenter']['lng']
+    room.center_lat = data['mapCenter']['lat']
+    room.zoom_level = data['zoomLevel']
+    room.save()
     
     Group('map_room-'+label).send({'text': message['text']})
 

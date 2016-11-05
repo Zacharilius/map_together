@@ -38,8 +38,10 @@ def create_map_room(request):
 
 def map_room(request, map_room=None):
     if map_room is None:
+        # TODO: auto create map room.
         raise("Why is this none")
-    room, created = MapRoom.objects.get_or_create(label=map_room)
+    map_room, created = MapRoom.objects.get_or_create(label=map_room)
     
-    # TODO: Retrieve current map state
-    return render(request, 'map_room/map_room.html')
+    return render(request, 'map_room/map_room.html', {
+        'map_room': mark_safe(json.dumps(map_room.format_map_room()))
+        })

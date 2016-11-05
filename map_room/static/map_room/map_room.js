@@ -4,13 +4,12 @@ var MapRoom = function() {
         setupWebSocket();
     }
     
-    var mapRoom = L.map('map-room-map').setView([47.6062, -122.3321], 13);
+    var mapRoom = L.map('map-room-map').setView([getMapRoomData()['center']['lat'], getMapRoomData()['center']['lng']], getMapRoomData()['zoom']);
     
     /* Leaflet Map */
     var setupMap = function() {
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 18,
             id: 'mapbox.light',
             accessToken: 'pk.eyJ1IjoiemFjaGFyaWxpdXMiLCJhIjoiY2l1cHU4eGk4MDFsazNvcGh4dzRnZWU0NSJ9.pIC-kFg6gpOpA-s0to0C0g'
         }).addTo(mapRoom);
@@ -57,10 +56,7 @@ var MapRoom = function() {
     
     /* Pan Sync */
     mapRoom.on('moveend', function(e) {
-        var message = {
-            'action': 'pan',
-            'mapCenter': e.target.getCenter()
-        };
+        var message = createMessageFor('pan', e)
         
         console.log('sending pan request');
         
@@ -82,10 +78,7 @@ var MapRoom = function() {
     
     /* Zoom Sync */
     mapRoom.on('zoomend', function(e) {
-        var message = {
-            'action': 'zoom',
-            'zoomLevel': e.target.getZoom()
-        };
+        var message = createMessageFor('zoom', e)
         console.log('sending zoom request');
         
         sendWebSocketMessage(message);
@@ -106,7 +99,7 @@ var MapRoom = function() {
     }
     
     /* Location */
-    var getGeoLocation= function() {
+    var getGeoLocation = function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(updateLocation);
         } else {
@@ -119,8 +112,24 @@ var MapRoom = function() {
         "<br>Longitude: " + position.coords.longitude); 
     }
     
+    /* */
+    var createMessageFor = function(action, e) {
+        var message = {
+            'action': action,
+            'mapCenter': e.target.getCenter(),
+            'zoomLevel': e.target.getZoom()
+        };
+        return message;
+    }
+    
     /* Init */
     this.init();
 }
 
+/* Util */
+var getMapRoomData = function() {
+    return window.mapRoom;
+}
+
+/* Init */
 var mapRoom = MapRoom();

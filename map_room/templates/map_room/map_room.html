@@ -15,5 +15,8 @@
 {% endblock %}
 
 {% block page_js %}
+    <script>
+        var mapRoom = {{ map_room }}
+    </script>
     <script type="text/javascript" src="{% static 'map_room/map_room.js' %}"></script>
 {% endblock %}
