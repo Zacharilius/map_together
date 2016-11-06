@@ -30,7 +30,7 @@ class MapRoom(models.Model):
                 'name': self.name,
                 'label': self.label,
                 'path': self.get_absolute_url(),
-                'center': {'lat': self.center_lat, 'lng': self.center_lng},
+                'mapCenter': {'lat': self.center_lat, 'lng': self.center_lng},
                 'zoom': self.zoom_level,
             }
     

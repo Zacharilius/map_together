@@ -4,9 +4,11 @@ var MapRoom = function() {
         setupWebSocket();
     }
     
-    var mapRoom = L.map('map-room-map').setView([getMapRoomData()['center']['lat'], getMapRoomData()['center']['lng']], getMapRoomData()['zoom']);
+    var mapState = getMapRoomData();
     
-    /* Leaflet Map */
+    var mapRoom = L.map('map-room-map').setView([mapState['mapCenter']['lat'], mapState['mapCenter']['lng']], mapState['zoom']);
+    
+    /* ==== Leaflet Map ==== */
     var setupMap = function() {
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -17,27 +19,57 @@ var MapRoom = function() {
     
     /* ==== Leaflet Map Sync ==== */
     /* Will not sync local action while processing sync from server */
-    var syncInProgress = false;
+    var lastSyncedMapState = {};
     
     var setupWebSocket = function() {
         var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-        window.map_room_ws = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname);
+        window.mapRoomWS = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname);
+        
+        window.mapRoomWS.onmessage = function(e) {
+            var message = JSON.parse(e.data);
 
-        window.map_room_ws.onmessage = function(e) {
-            syncInProgress = true
+            if (isMapInSyncWith(message)) {
+                /* Map is already sync */
+                return;
+            }
             
-            var data = JSON.parse(e.data);
-            onMapSyncMessage(data)
-            
-            syncInProgress = false;
+            lastSyncedMapState = message;
+            onMapSyncMessage(message)
         }
     }
     
     var sendWebSocketMessage = function(message) {
-        /* Prevent syncing ping pong with web socket server */
-        if (!syncInProgress) {
-            window.map_room_ws.send(JSON.stringify(message));
+        lastSyncedMapState = message;
+        window.mapRoomWS.send(JSON.stringify(message));
+    }
+    
+    var isMapInSyncWith = function(message) {
+        var mapCenter = mapRoom.getCenter();
+        var mapCenterInSync = mapCenter['lat'] === message['mapCenter']['lat'] ||
+                              mapCenter['lng'] === message['mapCenter']['lng'];
+        
+        var mapZoom = mapRoom.getZoom();
+        var zoomInSync = mapZoom == message['zoomLevel'];
+        
+        return mapCenterInSync && mapZoom;
+    }
+    
+    /* Updating the map fires a Leaflet Event. This function determines if the 
+       event is a valid and needs to be setn to other users in the map room.
+    */
+    var isEventEchoFromSync = function() {
+        /* If no syncs have occurred then lastSyncedMapState is empty {} */
+        if (Object.keys(lastSyncedMapState).length === 0) {
+            return false;
         }
+        var mapCenter = mapRoom.getCenter();
+        var mapCenterInSync = mapCenter['lat'] === lastSyncedMapState['mapCenter']['lat'] &&
+                              mapCenter['lng'] === lastSyncedMapState['mapCenter']['lng'];
+        
+        var mapZoom = mapRoom.getZoom();
+        var zoomInSync = mapZoom == lastSyncedMapState['zoomLevel'];
+        
+        return mapCenterInSync && mapZoom;
     }
     
     var onMapSyncMessage = function(data) {
@@ -56,46 +88,28 @@ var MapRoom = function() {
     
     /* Pan Sync */
     mapRoom.on('moveend', function(e) {
-        var message = createMessageFor('pan', e)
+        if (isEventEchoFromSync()) {
+            return;
+        }
         
-        console.log('sending pan request');
-        
-        sendWebSocketMessage(message);
-        L.DomEvent.preventDefault(e);
+        sendWebSocketMessage(createMessageFor('pan', e));
     });
     
     var performPanAction = function(data) {
-        new_map_center = data['mapCenter'];
-        current_map_center = mapRoom.getCenter();
-        
-        if (new_map_center['lat'] != current_map_center['lat'] || new_map_center['lng'] != current_map_center['lng']) {
-            console.log('performing requested pan');
-            mapRoom.setView(new_map_center);
-        } else {
-            /* Already at map center so no need to sync */
-        }
+        mapRoom.setView(data['mapCenter']);
     }
     
     /* Zoom Sync */
     mapRoom.on('zoomend', function(e) {
-        var message = createMessageFor('zoom', e)
-        console.log('sending zoom request');
+        if (isEventEchoFromSync()) {
+            return;
+        }
         
-        sendWebSocketMessage(message);
-        L.DomEvent.preventDefault(e);
+        sendWebSocketMessage(createMessageFor('zoom', e));
     })
     
     var performZoomAction = function(data) {
-        console.log('zooming');
-        new_map_zoom = data['zoomLevel'];
-        current_map_center = mapRoom.getZoom();
-        
-        if (new_map_zoom != current_map_center) {
-            console.log('performing requested zoom');
-            mapRoom.setZoom(new_map_zoom);
-        } else {
-            /* Already at correct zoom so no need to sync */
-        }
+        mapRoom.setZoom(data['zoomLevel']);
     }
     
     /* Location */
@@ -122,8 +136,10 @@ var MapRoom = function() {
         return message;
     }
     
-    /* Init */
+    /* ==== Init  ==== */
     this.init();
+    
+    return this;
 }
 
 /* Util */
