@@ -32,7 +32,7 @@ class MapRoom(models.Model):
                 'path': self.get_absolute_url(),
                 'mapCenter': {'lat': self.center_lat, 'lng': self.center_lng},
                 'zoom': self.zoom_level,
-            }
+                }
     
     @staticmethod
     def get_formatted_rooms():
@@ -40,7 +40,7 @@ class MapRoom(models.Model):
         
         map_rooms_list = []
         for map_room in map_rooms:
-            map_rooms_list.append(self.format_map_room())
+            map_rooms_list.append(map_room.format_map_room())
         
         return map_rooms_list
     

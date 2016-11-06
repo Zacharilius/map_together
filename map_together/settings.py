@@ -11,15 +11,16 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import dj_database_url
 import os
+import random
+import string
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get("SECRET_KEY", "".join(random.choice(string.printable) for i in range(40)))
+DEBUG = os.environ.get("DEBUG", False)
 
 
 # Application definition
@@ -127,6 +128,43 @@ TEMPLATES = [
     },
 ]
 
+# Database
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+
+DATABASES = {
+    'default': dj_database_url.config(default="postgres:///channels-example", conn_max_age=500)
+}
+
+# Redis Settings
+
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379/1'
+
+# Channels
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        "LOCATION": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        #'LOCATION': 'redis://%s:%s' % (REDIS_HOST, REDIS_PORT),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    }
+ }
+
+# Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            #"hosts": ['redis://%s:%s' % (REDIS_HOST, REDIS_PORT)],
+            "prefix": '%s::' % 'map_together',
+        },
+        "ROUTING": "map_room.routing.channel_routing",
+    },
+}
+
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -137,4 +175,4 @@ ALLOWED_HOSTS = ['*']
 try:
     from .settings_local import *
 except ImportError:
-    raise('Failed to locate settings_local')
+    print('Failed to locate settings_local')
