@@ -1,7 +1,19 @@
+/* Init */
+$(function() {
+    var map = new MapRoom();
+    var buttonBar = ButtonBar(map);
+})
+
 var MapRoom = function() {
-    this.init = function() {
+    var isSyncActive = true;
+    
+    var init = function() {
         setupMap();
         setupWebSocket();
+    }
+    
+    this.toggleSync = function() {
+        isSyncActive = !isSyncActive;
     }
     
     var mapState = getMapRoomData();
@@ -39,8 +51,10 @@ var MapRoom = function() {
     }
     
     var sendWebSocketMessage = function(message) {
-        lastSyncedMapState = message;
-        window.mapRoomWS.send(JSON.stringify(message));
+        if (isSyncActive) {
+            lastSyncedMapState = message;
+            window.mapRoomWS.send(JSON.stringify(message));
+        }
     }
     
     var isMapInSyncWith = function(message) {
@@ -73,16 +87,18 @@ var MapRoom = function() {
     }
     
     var onMapSyncMessage = function(data) {
-        var action = data['action'];
-        switch(action) {
-            case 'pan':
-                performPanAction(data);
-                break;
-            case 'zoom':
-                performZoomAction(data);
-                break;
-            default:
-                console.warn('Unrecognized action: ' + action);
+        if (isSyncActive) {
+            var action = data['action'];
+            switch(action) {
+                case 'pan':
+                    performPanAction(data);
+                    break;
+                case 'zoom':
+                    performZoomAction(data);
+                    break;
+                default:
+                    console.warn('Unrecognized action: ' + action);
+            }
         }
     }
     
@@ -137,15 +153,58 @@ var MapRoom = function() {
     }
     
     /* ==== Init  ==== */
-    this.init();
+    init();
+}
+
+var ButtonBar = function(map) {
+    var map = map;
     
-    return this;
+    this.init = function() {
+        setupDragButtonBar();
+        setupSyncToggleButton();
+    }
+    
+    var setupDragButtonBar = function() {
+        var isMouseDown = false;
+        
+        var map = document.querySelector('#map-room-map');
+        var mapToolbar = document.querySelector('#map-toolbar');
+        
+        var mouseDown = function() {
+            isMouseDown = true;
+        }
+        
+        var mouseUp = function() {
+            isMouseDown = false;
+        }
+        
+        var mouseMove = function(e) {
+            if (isMouseDown) {
+                mapToolbar.style.right = map.offsetWidth - e.clientX  - 25 + 'px';
+                mapToolbar.style.top = e.clientY - 25 + 'px';
+            }
+        }
+        
+        mapToolbar.addEventListener('mousedown', mouseDown, false);
+        window.addEventListener('mouseup', mouseUp, false);
+        window.addEventListener('mousemove', mouseMove, false);
+    }
+    
+    var setupSyncToggleButton = function() {
+        var clickSyncToggleButton = function() {
+            this.classList.toggle('is-active');
+            map.toggleSync();
+        }
+        
+        syncToggle = document.querySelector('#map-toolbar-sync-toggle');
+        syncToggle.addEventListener('click', clickSyncToggleButton);
+    }
+    
+    /* ==== Init  ==== */
+    this.init();
 }
 
 /* Util */
 var getMapRoomData = function() {
     return window.mapRoom;
 }
-
-/* Init */
-var mapRoom = MapRoom();

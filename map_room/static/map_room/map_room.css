@@ -1,3 +1,46 @@
+/* Leaflet Map have 100% Height */
+html, body, .map-room-container {
+   height: 100%;
+}
+
+.map-room-container {
+    height: 100%;
+    position: relative;
+}
+
 #map-room-map {
-    height: 500px;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+}
+
+/* Map toolbar*/
+#map-toolbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+/*    width: 50px;  width same as #map-room-map right offset 
+*/}
+
+#map-toolbar-sync-toggle {
+    padding: 0px;
+    margin: 0px;
+}
+
+#map-toolbar label {
+    width: 50px;
+}
+
+.map-toolbar-button i {
+    color: #121212;
+    font-size: 50px;
+}
+
+.map-toolbar-button.is-active i {
+    color: #421111;
+}
+
+.focus.active.map-toolbox-button .material-icons {
+    color: red;
 }
