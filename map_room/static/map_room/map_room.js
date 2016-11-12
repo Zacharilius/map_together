@@ -1,7 +1,8 @@
 /* Init */
 $(function() {
     var map = new MapRoom();
-    var buttonBar = ButtonBar(map);
+    var buttonBar = new ButtonBar(map);
+    var chat = new Chat();
 })
 
 var MapRoom = function() {
@@ -32,12 +33,12 @@ var MapRoom = function() {
     /* ==== Leaflet Map Sync ==== */
     /* Will not sync local action while processing sync from server */
     var lastSyncedMapState = {};
+    var mapRoomWS;
     
     var setupWebSocket = function() {
-        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-        window.mapRoomWS = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname);
+        mapRoomWS = createWebSocket('map-sync');
         
-        window.mapRoomWS.onmessage = function(e) {
+        mapRoomWS.onmessage = function(e) {
             var message = JSON.parse(e.data);
 
             if (isMapInSyncWith(message)) {
@@ -53,7 +54,7 @@ var MapRoom = function() {
     var sendWebSocketMessage = function(message) {
         if (isSyncActive) {
             lastSyncedMapState = message;
-            window.mapRoomWS.send(JSON.stringify(message));
+            mapRoomWS.send(JSON.stringify(message));
         }
     }
     
@@ -108,7 +109,7 @@ var MapRoom = function() {
             return;
         }
         
-        sendWebSocketMessage(createMessageFor('pan', e));
+        sendWebSocketMessage(createMapSyncMessageFor('pan', e));
     });
     
     var performPanAction = function(data) {
@@ -121,7 +122,7 @@ var MapRoom = function() {
             return;
         }
         
-        sendWebSocketMessage(createMessageFor('zoom', e));
+        sendWebSocketMessage(createMapSyncMessageFor('zoom', e));
     })
     
     var performZoomAction = function(data) {
@@ -142,8 +143,7 @@ var MapRoom = function() {
         "<br>Longitude: " + position.coords.longitude); 
     }
     
-    /* */
-    var createMessageFor = function(action, e) {
+    var createMapSyncMessageFor = function(action, e) {
         var message = {
             'action': action,
             'mapCenter': e.target.getCenter(),
@@ -156,30 +156,30 @@ var MapRoom = function() {
     init();
 }
 
+
 var ButtonBar = function(map) {
     var map = map;
     
     this.init = function() {
         setupDragButtonBar();
-        setupSyncToggleButton();
+        buttonSetup();
     }
     
+    var isButtonBarDragInProgress = false;
     var setupDragButtonBar = function() {
-        var isMouseDown = false;
-        
         var map = document.querySelector('#map-room-map');
         var mapToolbar = document.querySelector('#map-toolbar');
         
         var mouseDown = function() {
-            isMouseDown = true;
+            isButtonBarDragInProgress = true;
         }
         
         var mouseUp = function() {
-            isMouseDown = false;
+            isButtonBarDragInProgress = false;
         }
         
         var mouseMove = function(e) {
-            if (isMouseDown) {
+            if (isButtonBarDragInProgress) {
                 mapToolbar.style.right = map.offsetWidth - e.clientX  - 25 + 'px';
                 mapToolbar.style.top = e.clientY - 25 + 'px';
             }
@@ -188,6 +188,12 @@ var ButtonBar = function(map) {
         mapToolbar.addEventListener('mousedown', mouseDown, false);
         window.addEventListener('mouseup', mouseUp, false);
         window.addEventListener('mousemove', mouseMove, false);
+    }
+    
+    /* ==== Buttons ==== */
+    var buttonSetup = function() {
+        setupSyncToggleButton();
+        setupChatToggleButton();
     }
     
     var setupSyncToggleButton = function() {
@@ -200,11 +206,94 @@ var ButtonBar = function(map) {
         syncToggle.addEventListener('click', clickSyncToggleButton);
     }
     
+    var setupChatToggleButton = function() {
+        var clickChatToggleButton = function() {
+            var mapRoomChat = document.querySelector('#map-room-chat');
+            
+            /* Position chat below the Map toolbar */
+            var mapToolbar = document.querySelector('#map-toolbar')
+            mapToolbarBoundingRect = mapToolbar.getBoundingClientRect();
+            mapRoomChat.style.top = (mapToolbarBoundingRect['top'] + mapToolbarBoundingRect['height']) + "px";
+            mapRoomChat.style.right = (document.body.offsetWidth - mapToolbarBoundingRect['left'] - mapToolbarBoundingRect['width']) + "px";
+            
+            mapRoomChat.classList.toggle('is-visible');
+        }
+        
+        var chatToggleButton = document.querySelector('#map-toolbar-chat-toggle');
+        chatToggleButton.addEventListener('click', clickChatToggleButton);
+    }
+    
     /* ==== Init  ==== */
     this.init();
 }
 
+var Chat = function() {
+    var init = function() {
+        populateChatMessages();
+        setupChat();
+        setupWebSocket();
+    }
+    
+    var populateChatMessages = function() {
+        for (i = 0; i < chatMessages.length; i++) {
+            chatMessage = chatMessages[i];
+            appendNewChatMessage(chatMessage);
+        }
+    }
+    
+    var setupChat = function() {
+        var submitChatInput = function(e) {
+            var chatInput = document.querySelector('#map-room-chat-input');
+            sendWebSocketMessage(chatInput.value);
+            chatInput.value = ''
+            
+            e.preventDefault();
+        }
+        
+        var chatForm = document.querySelector('#map-room-chat form');
+        chatForm.addEventListener('submit', submitChatInput);
+    }
+    
+    var appendNewChatMessage = function(message) {
+        document.querySelector('#map-room-message-container').innerHTML +='<p>' + message + '</p>';
+        
+        /* Scroll into view */
+        var mapRoomContainer = document.querySelector('#map-room-message-container');
+        mapRoomContainer.scrollTop = mapRoomContainer.scrollHeight;
+    }
+    
+    var chatWS;
+    var setupWebSocket = function() {
+        chatWS = createWebSocket('chat');
+        
+        chatWS.onmessage = function(e) {
+            var message = JSON.parse(e.data);
+            appendNewChatMessage(message['messageText']);
+        }
+    }
+    
+    var sendWebSocketMessage = function(messageText) {
+        chatWS.send(JSON.stringify(createChatMessage(messageText)));
+    }
+    
+    var createChatMessage = function(messageText) {
+        var message = {
+            'type': 'chat',
+            'messageText': messageText
+        };
+        return message;
+    }
+    
+    /* ==== Init  ==== */
+    init();
+}
+
 /* Util */
+var createWebSocket = function(path) {
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    return new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname + path);
+}
+
 var getMapRoomData = function() {
     return window.mapRoom;
 }

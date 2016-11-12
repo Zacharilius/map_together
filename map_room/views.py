@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django.utils.safestring import mark_safe
 import json
-from .models import MapRoom
+from .models import ChatMessage, MapRoom
 
 
 def join_map_room(request):
@@ -23,7 +23,9 @@ def join_map_room(request):
 def create_map_room(request):
     map_room_name = request.POST.get('mapRoomName')
 
-    map_room, created = MapRoom.objects.get_or_create(label=map_room_name)
+    map_room, created = MapRoom.objects.get_or_create(
+                            name=map_room_name,
+                            label=map_room_name)
 
     response_data = {
         'created': created,
@@ -41,7 +43,9 @@ def map_room(request, map_room=None):
         # TODO: auto create map room.
         raise("Why is this none")
     map_room, created = MapRoom.objects.get_or_create(label=map_room)
+    chat_messages = ChatMessage.get_recent_messages(map_room)
     
     return render(request, 'map_room/map_room.html', {
-        'map_room': mark_safe(json.dumps(map_room.format_map_room()))
+        'map_room': mark_safe(json.dumps(map_room.format_map_room())),
+        'chat_messages': mark_safe(json.dumps(chat_messages)),
         })

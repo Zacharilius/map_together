@@ -1,3 +1,4 @@
+/* Map */
 /* Leaflet Map have 100% Height */
 html, body, .map-room-container {
    height: 100%;
@@ -44,3 +45,41 @@ html, body, .map-room-container {
 .focus.active.map-toolbox-button .material-icons {
     color: red;
 }
+
+/* Chat */
+#map-room-chat {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    border-radius: 25px;
+    padding: 16px;
+    width: 400px;
+    height: 300px;
+    z-index: 2;
+}
+
+#map-room-chat.is-visible {
+    display: block;
+}
+
+#map-room-chat #map-room-message-container {
+    height: 200px;
+    margin-bottom: 16px;
+    overflow-y: auto;
+}
+
+#map-room-chat #map-room-message-container p {
+    padding: 4px;
+    overflow-wrap: break-word;
+}
+
+#map-room-chat #map-room-message-container p:nth-child(even) {
+    background-color: #EEEEEE;
+}
+
+#map-room-chat form {
+    margin-right: 15px;
+}
+

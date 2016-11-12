@@ -14,15 +14,33 @@
             <button id="map-toolbar-sync-toggle" type="button" class="btn btn-secondary map-toolbar-button">
                 <i class="material-icons">check_box</i>
             </button>
+            <button id="map-toolbar-chat-toggle" type="button" class="btn btn-secondary map-toolbar-button">
+                <i class="material-icons">face</i>
+            </button>
         </div>
         
-        <h1 id="map-room-long-lat"></h1>
+        <div id="map-room-chat">
+            <div id="map-room-message-container">
+                <!-- Populated by JS -->
+            </div>
+            <form>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <input type="text"  id="map-room-chat-input" class="form-control form-control-lg"  placeholder="Maps are fun">
+                    </div>
+                    <button class="col-sm-2 btn btn-primary">
+                        <i class="material-icons">keyboard_return</i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 
 {% block page_js %}
     <script>
-        var mapRoom = {{ map_room }}
+        var mapRoom = {{ map_room }};
+        var chatMessages = {{ chat_messages }};
     </script>
     <script type="text/javascript" src="{% static 'map_room/map_room.js' %}"></script>
 {% endblock %}
