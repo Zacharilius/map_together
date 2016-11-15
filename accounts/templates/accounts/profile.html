@@ -1,0 +1,26 @@
+{% extends "base_page.html" %}
+
+{% load staticfiles %}
+
+{% block page_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/profile.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Your map rooms</h1>
+    <ul>
+        {% for map_room in user_map_rooms %}
+            <li><a href="{{ map_room.path }}">{{ map_room.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block page_js %}
+    <script>
+        var navUserData = {{ nav_user_data }};
+    </script>
+    
+    <script type="text/javascript" src="{% static 'accounts/profile.js' %}"></script>
+{% endblock %}

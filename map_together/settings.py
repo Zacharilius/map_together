@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     # Project Apps
     'home',
     'map_room',
+    'accounts',
 )
 
 MIDDLEWARE_CLASSES = (

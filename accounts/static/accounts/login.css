@@ -1,0 +1,20 @@
+#accounts-container {
+    margin-top: 16px;
+}
+
+#accounts-container form {
+    margin: 0 auto;
+}
+
+#accounts-container form button {
+    width: 110px;
+    float: right;
+}
+
+#accounts-login-error {
+    display: none;
+}
+
+#accounts-logout-success {
+    display: none;
+}

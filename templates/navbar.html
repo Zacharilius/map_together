@@ -13,4 +13,22 @@
       <a class="nav-link" href="h">Contact</a>
     </li> -->
   </ul>
+  
+  <ul class="nav navbar-nav float-xs-right"">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% if nav_data.is_logged_in %}
+            {{ nav_data.username }}
+          {% endif %}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="supportedContentDropdown">
+          {% if not nav_data.is_logged_in %}
+            <a class="dropdown-item" href="{{ nav_data.login_url }}">Log in</a>
+          {% elif nav_data.is_logged_in %}
+            <a class="dropdown-item" href="{{ nav_data.profile_url }}">Profile</a>
+            <a class="dropdown-item" href="{{ nav_data.logout_url }}">Log out</a>
+          {% endif %}
+        </div>
+      </li>
+  </ul>
 </nav>

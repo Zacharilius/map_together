@@ -1,5 +1,13 @@
+from django.utils.safestring import mark_safe
 from django.http import HttpResponse
 from django.shortcuts import render
+import json
+from map_together.util import generate_nav_info, generate_nav_info_for_user
 
 def index(request):
-    return render(request, 'home/home.html')
+    user = request.user
+    
+    return render(request, 'home/home.html', {
+        'nav_data': generate_nav_info(user),
+        'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+    })

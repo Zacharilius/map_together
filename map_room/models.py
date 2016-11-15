@@ -1,4 +1,5 @@
 import datetime
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -8,6 +9,14 @@ DEFAULT_LONGITUDE = 47.6062
 DEFAULT_ZOOM = 13
 
 class MapRoom(models.Model):
+    owner = models.ForeignKey(
+        User,
+        default=None,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    
     name = models.TextField()
     
     label = models.SlugField(
@@ -51,6 +60,11 @@ class MapRoom(models.Model):
         
         return map_rooms_list
     
+    @staticmethod
+    def get_user_formatted_rooms(user):
+        user_map_rooms = MapRoom.objects.filter(owner=user)
+        return [m.format_map_room() for m in user_map_rooms]
+    
     def get_absolute_url(self):
         return reverse('map_room', kwargs={'map_room': self.label})
 
@@ -58,10 +72,18 @@ class MapRoom(models.Model):
         return self.label
 
 class ChatMessage(models.Model):
+    owner = models.ForeignKey(
+        User,
+        default=None,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    
     message = models.TextField()
     
     map_room = models.ForeignKey(
-        'MapRoom',
+        MapRoom,
         on_delete=models.CASCADE,
     )
     

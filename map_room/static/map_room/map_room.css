@@ -21,8 +21,7 @@ html, body, .map-room-container {
     top: 0;
     right: 0;
     z-index: 2;
-/*    width: 50px;  width same as #map-room-map right offset 
-*/}
+}
 
 #map-toolbar-sync-toggle {
     padding: 0px;
@@ -35,7 +34,7 @@ html, body, .map-room-container {
 
 .map-toolbar-button i {
     color: #121212;
-    font-size: 50px;
+    font-size: 30px;
 }
 
 .map-toolbar-button.is-active i {
