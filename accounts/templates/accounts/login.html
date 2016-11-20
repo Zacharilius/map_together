@@ -7,40 +7,91 @@
 {% endblock %}
 
 {% block content %}
-<div id="accounts-container" class="row container-fluid">
-    <div class="col-md-3"></div>
-    <form method="post" class="col-md-6">
-        {% csrf_token %}
-        <div class="form-group row">
-            <label for="accounts-username" class="col-sm-2 col-md-2 col-form-label">Email</label>
-            <div class="col-sm-10 col-md-10">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-            </div>
+    <div class="col-md-12 accounts-container-center">
+        <div class="btn-group accounts-button-group" role="group" aria-label="Select Log in or Sign up">
+            <button type="button" id="accounts-show-login-form" class="btn btn-secondary">Log In</button>
+            <button type="button" id="accounts-show-signup-form" class="btn btn-secondary">Sign Up</button>
         </div>
-        <div class="form-group row">
-            <label for="inputPassword3" class="col-sm-2 col-md-2 col-form-label">Password</label>
-            <div class="col-sm-10 col-md-10">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-            </div>
+    </div>
+    
+    <div class="col-md-12 accounts-container-center">
+        <div id="accounts-form-container" class="col-md-6">
+            <form class="accounts-login-form" action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="accounts-login-username" class="col-md-3 col-form-label">Username</label>
+                    <div class="col-sm-9 col-md-9">
+                        <input required type="text" class="form-control" id="accounts-login-username" name="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="accounts-login-password" class="col-sm-3 col-md-3 col-form-label">Password</label>
+                    <div class="col-sm-9 col-md-9">
+                        <input required type="password" class="form-control" id="accounts-login-password" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            </form>
+            <form class="accounts-signup-form" action="{% url 'signup' %}"  method="post">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="accounts-fname-email" class="col-sm-3 col-md-3 col-form-label">First Name</label>
+                    <div class="col-sm-9 col-md-9">
+                        <input required type="text" class="form-control" id="accounts-singup-fname" name="firstName" placeholder="First Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="accounts-lname-lname" class="col-sm-3 col-md-3 col-lname-label">Last Name</label>
+                    <div class="col-sm-9 col-md-9">
+                        <input required type="text" class="form-control" id="accounts-singup-lname" name="lastName" placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="accounts-singup-email" class="col-sm-3 col-md-3 col-form-label">Email</label>
+                    <div class="col-sm-9 col-md-9">
+                        <input required type="email" class="form-control" id="accounts-singup-email" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="accounts-singup-username" class="col-sm-3 col-md-3 col-form-label">Username</label>
+                    <div class="col-sm-10 col-md-9">
+                        <input required type="text" class="form-control" id="accounts-singup-username" name="username" placeholder="Username">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="accounts-singup-password" class="col-sm-3 col-md-3 col-form-label">Password</label>
+                    <div class="col-sm-9 col-md-9">
+                        <input required type="password" class="form-control" id="accounts-singup-password" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            </form>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
+    </div>
 </div>
 
-<div id="accounts-login-error" class="alert alert-danger alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <strong>Login Error: </strong> Incorrect username/password combination!
-</div>
+<div class="col-md-12 accounts-container-center">
+    <div id="accounts-login-error" class="alert alert-danger alert-dismissible fade in accounts-error" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Login Error: </strong> Incorrect username/password combination!
+    </div>
 
-<div id="accounts-logout-success" class="alert alert-success alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    <strong>Successfully logged out!</strong>
-</div>
+    <div id="accounts-logout-success" class="alert alert-success alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Successfully logged out!</strong>
+    </div>
 
+    <div id="accounts-signup-error" class="alert alert-danger alert-dismissible fade in accounts-error" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Sign up Error: </strong> An error while creating your account
+    </div>
+</div>
 {% endblock %}
 
 {% block page_js %}
