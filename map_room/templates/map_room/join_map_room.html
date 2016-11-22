@@ -7,36 +7,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="map-room-radio-container">
-                <label class="form-check-inline">
-                    <input class="form-check-input" type="radio" name="newOrJoinMapRoom" id="map-room-radio-new" value="new">
-                    New MapRoom
-                </label>
-                <label class="form-check-inline">
-                    <input class="form-check-input" type="radio" name="newOrJoinMapRoom" id="map-room-radio-join" value="join">
-                    Join MapRoom
-                </label>
+<div class="mdl-card mdl-shadow--6dp">
+    <div class="mdl-card__title">
+        <button class="mdl-button mdl-js-button mdl-button mdl-button--accent" id="map-room-button-new">
+            New MapRoom
+        </button>
+        <button class="mdl-button mdl-js-button mdl-button mdl-button--accent" id="map-room-button-join">
+            Join MapRoom
+        </button>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <div id="map-room-new-container">
+            <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" maxlength="50" type="text" value="room-name" id="map-room-room-name" />
+                <label class="mdl-textfield__label" for="map-room-room-name">Text...</label>
             </div>
-            <div class="map-room-selection-container">
-                <div id="map-room-new-container">
-                    <div class="form-group row">
-                        <div class="col-md-3"></div>
-                        <div class="col-xs-12 col-md-6">
-                            <input class="form-control"  maxlength="50" type="text" value="room-name" id="map-room-room-name">
-                        </div>
-                        <div class="col-xs-12 map-room-button-container">
-                            <input id="map-room-new-haiku-name-button" class="btn btn-primary" type="button" value="New Name" />
-                            <input id="map-room-new-submit-button" class="btn btn-primary" type="button" value="Submit" />
-                        </div>
-                    </div>
-                </div>
-                <div id="map-room-join-container">
-                    <h3>Public Rooms</h3>
-                </div>
-            </div>
+            <button id="map-room-new-haiku-name-button" class="mdl-button mdl-js-button mdl-button--accent">New Name</button>
+            
+            <button id="map-room-new-submit-button" class="mdl-button mdl-js-button mdl-button--primary" type="button" value="Submit">Submit</button>
+        </div>
+        <div id="map-room-join-container">
+            <h3>Public Rooms</h3>
         </div>
     </div>
 </div>

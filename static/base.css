@@ -1,3 +1,26 @@
 body {
     font-family: 'Roboto', sans-serif;
 }
+
+.mdl-layout {
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    padding-top: 32px;
+}
+
+/* MDL Overrides */
+.mdl-textfield.is-invalid .mdl-textfield__input {
+    border-color: rgb(139,195,74);
+}
+
+.mdl-textfield.is-invalid .mdl-textfield__label:after {
+    background-color: rgb(139,195,74);
+}
+
+/* Nav */
+#nav-right-dropdown {
+    text-transform: None
+}

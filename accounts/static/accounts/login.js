@@ -1,47 +1,31 @@
 
 $(function() {
     var form = new Forms();
-    
-    document.querySelector('#accounts-show-login-form').addEventListener('click', function() {
-        $('button').removeClass('is-active');
-        $(this).addClass('is-active');
-        form.hideSignupForm();
-        form.showLoginForm();
-    });
-    
-    document.querySelector('#accounts-show-signup-form').addEventListener('click', function() {
-        $('button').removeClass('is-active');
-        $(this).addClass('is-active');
-        form.hideLoginForm();
-        form.showSignupForm();
-    });
 })
 
 
 var Forms = function() {
+    var showSnackBarWithMessage = function(message) {
+        var data = {
+              message: message,
+              timeout: 10000,
+            };
+        document.querySelector('#map-together-show-snackbar').MaterialSnackbar.showSnackbar(data);
+    }
+    
     /* Login */
     var setupFailedLogin = function() {
         var isFailedLogin = window.location.search.indexOf('failed-login') != -1;
         if (isFailedLogin) {
-            /* Show Failed login Error */
-            $('#accounts-login-error').show();
+            showSnackBarWithMessage('Login Error: Incorrect username/password combination!');
         }
-    }
-    
-    this.showLoginForm = function() {
-        $('#accounts-form-container .accounts-login-form').fadeIn()
-    }
-    
-    this.hideLoginForm = function() {
-        $('#accounts-form-container .accounts-login-form').hide()
     }
     
     /* Logout */
    var setupSuccessfulLogout = function() {
         var isSuccessfulLogout = window.location.search.indexOf('successful-logout') != -1;
         if (isSuccessfulLogout) {
-            /* Show logout Success */
-            $('#accounts-logout-success').show();
+            showSnackBarWithMessage('Successfully logged out!');
         }
     }
     
@@ -49,23 +33,16 @@ var Forms = function() {
     var setupFailedSignup = function() {
         var isFailedSignup = window.location.search.indexOf('failed-signup') != -1;
         if (isFailedSignup) {
-            /* Show Failed signup Error */
-            $('#accounts-signup-error').show();
+            showSnackBarWithMessage('Sign up Error: An error while creating your account');
         }
-    }
-    
-    this.showSignupForm = function() {
-        $('#accounts-form-container .accounts-signup-form').fadeIn()
-    }
-    
-    this.hideSignupForm = function() {
-        $('#accounts-form-container .accounts-signup-form').hide()
     }
     
     /* Init */
     var init = function() {
         /* Login */
         setupFailedLogin();
+        
+        /* Logout */
         setupSuccessfulLogout();
         
         /* Signup */

@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'material_icons/material_icons.css' %}" />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mdl/material.min.css' %}" />
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'leaflet/leaflet.css' %}" />
@@ -31,17 +31,26 @@
     {% endblock %}
   </head>
   <body>
-    {% include 'navbar.html' %}
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color--grey-100">
+        {% include 'navbar.html' %}
     
+        <main class="mdl-layout__content">
+            {% block content %}
     
-    {% block content %}
+            {% endblock %}
+        </main>
+
+    </div>
     
-    {% endblock %}
+    <!-- Snackbar -->
+    <div id="map-together-show-snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
     
-    <!-- Bootstrap JS -->
+    <!-- MDL & JQuery JS -->
     <script type="text/javascript" src="{% static 'jquery/jquery-3.1.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tether/tether.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mdl/material.min.js' %}"></script>
     
     <!-- Reconnecting Websocket JS -->
     <script type="text/javascript" src="{% static 'reconnecting_websocket/reconnecting_websocket.min.js' %}"></script>

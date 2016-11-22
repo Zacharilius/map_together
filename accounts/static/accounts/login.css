@@ -1,42 +1,7 @@
-#accounts-container {
-    margin-top: 16px;
-}
-
-.accounts-container-center {
-    margin: 32px 0 16px 0;
-    text-align: center;
-}
-
-.col-form-label {
-    padding-right: 8px;
-}
-
-#accounts-form-container {
-    float: none;
-    margin: 0 auto;
-}
-
-.accounts-button-group button.is-active,
-.accounts-button-group button:active,
-.accounts-button-group button:focus {
-    border: none;
-    background-color: #1ab188;
-}
-
-#accounts-form-container form {
-    display: none;
-}
-
-#accounts-form-container form button {
-    width: 110px;
-    float: right;
+#accounts-signup-panel {
+    /*display: none;*/
 }
 
 .accounts-error {
     display: none;
 }
-
-#accounts-logout-success {
-    display: none;
-}
-

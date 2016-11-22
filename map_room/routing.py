@@ -17,6 +17,5 @@ channel_routing = [
     # Chat
     route("websocket.connect", ws_chat_connect, path=MAP_ROOM_CHAT),
     route("websocket.receive", ws_chat_receive, path=MAP_ROOM_CHAT),
-    
     route("websocket.disconnect", ws_chat_disconnect, path=MAP_ROOM_CHAT),
 ]

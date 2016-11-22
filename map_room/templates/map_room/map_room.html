@@ -11,25 +11,31 @@
         <div id="map-room-map">
         </div>
         <div id="map-toolbar" class="btn-group-vertical" role="group" aria-label="Vertical button group">
-            <button id="map-toolbar-sync-toggle" type="button" class="btn btn-secondary map-toolbar-button">
+            <button id="map-toolbar-sync-toggle" class="mdl-button mdl-js-button mdl-button--icon">
                 <i class="material-icons">check_box</i>
             </button>
-            <button id="map-toolbar-chat-toggle" type="button" class="btn btn-secondary map-toolbar-button">
+            <div class="mdl-tooltip" data-mdl-for="map-toolbar-sync-toggle">Map Sync</div>
+            
+            <button id="map-toolbar-chat-toggle" class="mdl-button mdl-js-button mdl-button--icon">
                 <i class="material-icons">face</i>
             </button>
+            <div class="mdl-tooltip" data-mdl-for="map-toolbar-chat-toggle">Chat</div>
         </div>
         
-        <div id="map-room-chat">
+        <div id="map-room-chat" class="mdl-card">
+            <div class="mdl-card__title">
+                <h3>Chat</h3>
+            </div>
             <div id="map-room-message-container">
                 <!-- Populated by JS -->
             </div>
-            <form>
-                <div class="form-group row">
-                    <div class="col-sm-10">
-                        <input type="text"  id="map-room-chat-input" class="form-control form-control-lg"  placeholder="Maps are fun">
+            <form class="mdl-card__supporting-text">
+                    <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" maxlength="50" type="text" id="map-room-chat-input" />
+                        <label class="mdl-textfield__label" for="map-room-chat-input">I do declare...</label>
                     </div>
-                    <button class="col-sm-2 btn btn-primary">
-                        <i class="material-icons">keyboard_return</i>
+                    <button class="mdl-button mdl-js-button mdl-button--accent">
+                        Send
                     </button>
                 </div>
             </form>

@@ -1,7 +1,13 @@
 /* Map */
 /* Leaflet Map have 100% Height */
-html, body, .map-room-container {
-   height: 100%;
+html, body, .mdl-layout, .mdl-layout__content, .map-room-container, #map-room-map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Overrides default padding*/
+main {
+    padding-top: 0;
 }
 
 .map-room-container {
@@ -17,6 +23,9 @@ html, body, .map-room-container {
 
 /* Map toolbar*/
 #map-toolbar {
+    background-color:#EEE;
+    border-radius: 10%;
+    padding: 2px;
     position: absolute;
     top: 0;
     right: 0;
@@ -32,17 +41,8 @@ html, body, .map-room-container {
     width: 50px;
 }
 
-.map-toolbar-button i {
+#map-toolbar i {
     color: #121212;
-    font-size: 30px;
-}
-
-.map-toolbar-button.is-active i {
-    color: #421111;
-}
-
-.focus.active.map-toolbox-button .material-icons {
-    color: red;
 }
 
 /* Chat */
@@ -55,8 +55,12 @@ html, body, .map-room-container {
     border-radius: 25px;
     padding: 16px;
     width: 400px;
-    height: 300px;
+    height: 400px;
     z-index: 2;
+}
+
+#map-room-chat .mdl-card__title h3 {
+    margin: 0;
 }
 
 #map-room-chat.is-visible {
@@ -64,7 +68,7 @@ html, body, .map-room-container {
 }
 
 #map-room-chat #map-room-message-container {
-    height: 200px;
+    height: 150px;
     margin-bottom: 16px;
     overflow-y: auto;
 }

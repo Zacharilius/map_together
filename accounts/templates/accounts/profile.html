@@ -7,13 +7,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Your map rooms</h1>
-    <ul>
-        {% for map_room in user_map_rooms %}
-            <li><a href="{{ map_room.path }}">{{ map_room.name }}</a></li>
-        {% endfor %}
-    </ul>
+<div class="mdl-card mdl-shadow--6dp">
+    <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Your map rooms</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <ul class="mdl-list">
+            {% for map_room in user_map_rooms %}
+                <li class="mdl-list__item">
+                    <a class="mdl-list__item-primary-content" href="{{ map_room.path }}">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-avatar">satellite</i>
+                            {{ map_room.name }}
+                            <span class="mdl-list__item-text-body">
+                                {{ map_room.description }}
+                            </span>
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}
 

@@ -7,27 +7,18 @@ var JoinMapRoom = function() {
     
     var setupMapRoomContainers = function() {
         /* Show/Hide New or Join MapRoom Containers */
-        document.getElementById('map-room-radio-new').addEventListener('click', function() {
-            var newMapRoom = document.getElementById('map-room-new-container');
-            if (this.checked) {
-                showNewMapRoomContainer();
-                hideJoinMapRoomContainer();
-            } else {
-                hideNewMapRoomContainer();
-            }
+        $('#map-room-button-new').click(function() {
+            showNewMapRoomContainer();
+            hideJoinMapRoomContainer();
         });
 
-        document.getElementById('map-room-radio-join').addEventListener('click', function() {
-            if (this.checked) {
-                showJoinMapRoomContainer();
-                hideNewMapRoomContainer();
-            } else {
-                hideJoinMapRoomContainer();
-            }
+        $('#map-room-button-join').click(function() {
+            showJoinMapRoomContainer();
+            hideNewMapRoomContainer();
         });
         
         /* Submit Name */
-        document.getElementById('map-room-new-submit-button').addEventListener('click', function() {
+        $('#map-room-new-submit-button').click(function() {
             var mapRoomName = document.getElementById('map-room-room-name').value;
             if (mapRoomName.length == 0) {
                 mapRoomName = createHaikuName();
@@ -43,24 +34,29 @@ var JoinMapRoom = function() {
                 success: function(data) {
                     /* Go to map room */
                     window.location = data['map_room_url'];
-                },
+                ;},
                 error: function(e) {
                     console.error(e.message);
                 }
             });
-        })
+        });
     }
     
     function addAllMapRooms() {
-        var allMapRooms = window.allMapRooms
+        var allMapRooms = window.allMapRooms;
         for (var i = 0; i < allMapRooms.length; i++) {
             var mapRoom = allMapRooms[i];
             
-            var mapRoomLink = document.createElement('a');
-            mapRoomLink.href = mapRoom.path;
-            mapRoomLink.text = mapRoom.label;
+            var mapRoomLink = $('<a></a>');
+            mapRoomLink.attr('href', mapRoom.path);
             
-            document.getElementById('map-room-join-container').appendChild(mapRoomLink);
+            var mapRoomButton = $('<button></button>');
+            mapRoomButton.addClass('mdl-button mdl-js-button');
+            mapRoomButton.text(mapRoom.label);
+            
+            mapRoomLink.append(mapRoomButton);
+
+            $('#map-room-join-container').append(mapRoomLink);
         }
     }
 

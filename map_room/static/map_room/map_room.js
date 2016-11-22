@@ -198,7 +198,12 @@ var ButtonBar = function(map) {
     
     var setupSyncToggleButton = function() {
         var clickSyncToggleButton = function() {
-            this.classList.toggle('is-active');
+            var thisIcon = $(this).find('i');
+            if (thisIcon.text() == 'check_box_outline_blank') {
+                thisIcon.text('check_box')
+            } else {
+                thisIcon.text('check_box_outline_blank')
+            }
             map.toggleSync();
         }
         
@@ -291,7 +296,7 @@ var Chat = function() {
 /* Util */
 var createWebSocket = function(path) {
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    return new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname + path);
+    return new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname + '/' + path);
 }
 
 var getMapRoomData = function() {

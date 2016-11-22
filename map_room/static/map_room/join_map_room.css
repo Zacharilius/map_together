@@ -25,3 +25,9 @@
     margin-left: 10px;
 }
 
+#map-room-current-name-input,
+#map-room-new-haiku-name-button {
+    box-sizing: border-box;
+    width: calc(50% - 2px);
+}
+

@@ -1,0 +1,15 @@
+.mdl-list__item a .mdl-list__item-primary-content {
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: .04em;
+    line-height: 1;
+    min-height: 48px;
+    color: rgba(0,0,0,.87);
+    cursor: pointer;
+}
+
+.mdl-list {
+    margin-top: 0;
+    padding-top: 0;
+}
