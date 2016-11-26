@@ -2,21 +2,11 @@ var JoinMapRoom = function() {
     var init = function() {
         setupMapRoomContainers();
         addAllMapRooms();
+        addAllMapRooms();
         setupClickMapRoomnameGenerator();
     }
     
     var setupMapRoomContainers = function() {
-        /* Show/Hide New or Join MapRoom Containers */
-        $('#map-room-button-new').click(function() {
-            showNewMapRoomContainer();
-            hideJoinMapRoomContainer();
-        });
-
-        $('#map-room-button-join').click(function() {
-            showJoinMapRoomContainer();
-            hideNewMapRoomContainer();
-        });
-        
         /* Submit Name */
         $('#map-room-new-submit-button').click(function() {
             var mapRoomName = document.getElementById('map-room-room-name').value;
@@ -43,15 +33,22 @@ var JoinMapRoom = function() {
     }
     
     function addAllMapRooms() {
+        function compareAllMapRooms(a,b) {
+            if (a.name < b.name)
+                return -1;
+            if (a.name > b.name)
+                return 1;
+            return 0;
+        }
+        window.allMapRooms.sort(compareAllMapRooms);
         var allMapRooms = window.allMapRooms;
         for (var i = 0; i < allMapRooms.length; i++) {
             var mapRoom = allMapRooms[i];
+
+            var mapRoomLink = $('<button class="mdl-chip"></button>');
             
-            var mapRoomLink = $('<a></a>');
-            mapRoomLink.attr('href', mapRoom.path);
-            
-            var mapRoomButton = $('<button></button>');
-            mapRoomButton.addClass('mdl-button mdl-js-button');
+            var mapRoomButton = $('<a class="mdl-chip__text"></a>');
+            mapRoomButton.attr('href', mapRoom.path);
             mapRoomButton.text(mapRoom.label);
             
             mapRoomLink.append(mapRoomButton);
@@ -59,27 +56,7 @@ var JoinMapRoom = function() {
             $('#map-room-join-container').append(mapRoomLink);
         }
     }
-
-    var hideNewMapRoomContainer = function() {
-        var newMapRoom = document.getElementById('map-room-new-container');
-        newMapRoom.style.display = "none";
-    }
-
-    var showNewMapRoomContainer = function() {
-        var newMapRoom = document.getElementById('map-room-new-container');
-        newMapRoom.style.display = "block";
-    }
-
-    var hideJoinMapRoomContainer = function() {
-        var joinMapRoom = document.getElementById('map-room-join-container');
-        joinMapRoom.style.display = 'none';
-    }
-
-    var showJoinMapRoomContainer = function() {
-        var joinMapRoom = document.getElementById('map-room-join-container');
-        joinMapRoom.style.display = "block";
-    }
-
+    
     /* MapRoom Name Generator */
     function setupClickMapRoomnameGenerator() {
         addNewHaikuNameToContainerName();

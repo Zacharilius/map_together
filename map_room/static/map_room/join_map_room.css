@@ -7,27 +7,19 @@
     text-align: center;
 }
 
-#map-room-new-container {
-    display: none;
-}
-
 #map-room-new-container .map-room-button-container {
     margin-top: 16px;
 }
 
-
-#map-room-join-container {
-    display: none;
-}
-
 #map-room-join-container a {
+    text-decoration: none;
+    display: block;
     margin-right: 10px;
     margin-left: 10px;
 }
 
-#map-room-current-name-input,
-#map-room-new-haiku-name-button {
-    box-sizing: border-box;
-    width: calc(50% - 2px);
+/* MDL Override */
+.mdl-layout__content {
+    display: block;
+    width: 100%;
 }
-
