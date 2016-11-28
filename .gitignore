@@ -9,6 +9,8 @@ venv/
 
 # Django
 db.sqlite3
+settings_local.py
+media/
 
 # Node
 node_modules/

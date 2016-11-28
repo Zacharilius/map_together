@@ -2,12 +2,12 @@ from django.contrib.auth import authenticate, login as django_login, logout as d
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.utils.safestring import mark_safe
 import json
-from map_room.models import MapRoom
+from map_room.models import GeoJsonFile, MapRoom, USER_OWNED
 from map_together.util import generate_nav_info, generate_nav_info_for_user
 
 
@@ -39,15 +39,44 @@ def logout(request):
             })
 
 
+ONE_MEGABYTE = 1000000
+
 @login_required
 def profile(request):
     user = request.user
-    return render(request, 'accounts/profile.html', {
-                'nav_data': generate_nav_info(user),
-                'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-                'user_map_rooms': MapRoom.get_user_formatted_rooms(user),
-            })
 
+    if request.method == 'GET':
+        
+        return render(request, 'accounts/profile.html', {
+                    'nav_data': generate_nav_info(user),
+                    'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+                    'user_map_rooms': MapRoom.get_user_formatted_rooms(user),
+                })
+    elif request.method == 'POST':
+        post = request.POST
+        owner = user
+        title = post['title']
+        description = post['description']
+        geojsonFile = request.FILES['geojsonFile']
+        file_type = USER_OWNED
+
+        if geojsonFile.content_type not in ['application/json', 'text/javascript']:
+            return HttpResponseBadRequest('Bad Request: Improper file type. Accepted file extnesion are ".json" and ".js"')
+        
+        if geojsonFile.size > ONE_MEGABYTE:
+            return HttpResponse('Payload too large', status=413)
+
+        geo_json_file = GeoJsonFile(
+                            owner=owner,
+                            title=title,
+                            description=description,
+                            file=geojsonFile,
+                            file_type=file_type,
+                        )
+
+        geo_json_file.save()
+
+        return redirect(reverse('profile'))
 
 @require_POST
 def signup(request):

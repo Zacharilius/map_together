@@ -99,3 +99,62 @@ class ChatMessage(models.Model):
     
     def __str__(self):
         return self.message
+
+
+SHARED = 'SH'
+USER_OWNED = 'UO'
+
+GEO_JSON_FILE_TYPE = (
+    (SHARED, 'Shared'),
+    (USER_OWNED, 'User Owned'),
+)
+
+class GeoJsonFile(models.Model):
+    owner = models.ForeignKey(
+        User,
+        default=None,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+
+    title = models.TextField()
+
+    description = models.TextField()
+
+    file = models.FileField(
+        upload_to='geo-json/'
+    )
+
+    timestamp = models.DateTimeField(
+        default=datetime.datetime.now,
+        blank=True
+    )
+
+    file_type = models.CharField(
+        max_length=2,
+        choices=GEO_JSON_FILE_TYPE,
+        default=SHARED,
+    )
+
+    def format_geojson_files(self):
+        return dict(
+                owner=self.owner.username,
+                title=self.title,
+                description=self.description,
+                path=self.file.path,
+                timestamp=self.timestamp,
+                fileType=self.file_type,
+            )
+
+    @staticmethod
+    def get_shared_geojson_files():
+        all_files = GeoJsonFile.objects.filter(file_type=SHARED).select_related('owner')
+        all_files_formatted = [file.format_geojson_files() for file in all_files]
+        return all_files_formatted
+    
+    def __str__(self):
+        if self.owner is not None:
+            return '%s\'s %s' % (self.owner.username, self.title)
+        else:
+            return self.title

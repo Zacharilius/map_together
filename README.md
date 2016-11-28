@@ -22,7 +22,7 @@ $ pip install -r requirements.txt
 
 ### Create docker Postres database container
 ```
-$ docker run -p 5432:5432 --name my-postgres -e POSTGRES_PASSWORD=*mysecretpassword* -d postgres:9.6
+$ docker run -p 5432:5432 --name my-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres:9.6
 ```
 
 #### Restart 
