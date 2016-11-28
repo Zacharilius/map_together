@@ -2,7 +2,6 @@ var JoinMapRoom = function() {
     var init = function() {
         setupMapRoomContainers();
         addAllMapRooms();
-        addAllMapRooms();
         setupClickMapRoomnameGenerator();
     }
     

@@ -51,6 +51,7 @@ def profile(request):
                     'nav_data': generate_nav_info(user),
                     'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
                     'user_map_rooms': MapRoom.get_user_formatted_rooms(user),
+                    'geo_json_files': GeoJsonFile.get_user_geojson_files(user),
                 })
     elif request.method == 'POST':
         post = request.POST

@@ -15,8 +15,7 @@
 }
 
 .profile-card {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin: 16px;
     display: inline-block;
     vertical-align: top;
 }

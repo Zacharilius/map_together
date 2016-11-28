@@ -142,10 +142,16 @@ class GeoJsonFile(models.Model):
                 owner=self.owner.username,
                 title=self.title,
                 description=self.description,
-                path=self.file.path,
+                url=self.file.url,
                 timestamp=self.timestamp,
                 fileType=self.file_type,
             )
+
+    @staticmethod
+    def get_user_geojson_files(user):
+        all_files = GeoJsonFile.objects.filter(owner=user).select_related('owner')
+        all_files_formatted = [file.format_geojson_files() for file in all_files]
+        return all_files_formatted
 
     @staticmethod
     def get_shared_geojson_files():

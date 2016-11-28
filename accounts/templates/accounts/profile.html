@@ -61,6 +61,28 @@
         </form>
     </div>
 </div>
+<div class="mdl-card mdl-shadow--6dp profile-card">
+    <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Your uploaded json files</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <ul class="mdl-list">
+            {% for geo_json_files in geo_json_files %}
+                <li class="mdl-list__item mdl-list__item--three-line">
+                    <a download class="mdl-list__item-primary-content" href="{{ geo_json_files.url }}">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-avatar">file_download</i>
+                            <span>{{ geo_json_files.title }}</span>
+                            <span class="mdl-list__item-text-body">
+                                {{ geo_json_files.description }}
+                            </span>
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}
 
 {% block page_js %}
