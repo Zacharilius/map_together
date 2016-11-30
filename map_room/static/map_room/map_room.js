@@ -128,6 +128,13 @@ var MapRoom = function() {
     var performZoomAction = function(data) {
         mapRoom.setZoom(data['zoomLevel']);
     }
+
+    /* ==== Leaflet GeoJSON ==== */
+    this.addGeojsonFileToMap = function(geoJsonIndex) {
+        geoJsonIndex = 0;
+        var geojsonVarName = getGeojsonFileInfos()[geoJsonIndex]['varName'];
+        L.geoJSON(window[geojsonVarName]).addTo(mapRoom);
+    }    
     
     /* Location */
     var getGeoLocation = function() {
@@ -194,6 +201,7 @@ var ButtonBar = function(map) {
     var buttonSetup = function() {
         setupSyncToggleButton();
         setupChatToggleButton();
+        setupGeojsonFiles();
     }
     
     var setupSyncToggleButton = function() {
@@ -226,6 +234,18 @@ var ButtonBar = function(map) {
         
         var chatToggleButton = document.querySelector('#map-toolbar-chat-toggle');
         chatToggleButton.addEventListener('click', clickChatToggleButton);
+    }
+
+    var setupGeojsonFiles = function() {
+        var geojsonFileInfos = getGeojsonFileInfos();
+        for (let i = 0; i < geojsonFileInfos.length; i++) {
+            var li = $('<li class="mdl-menu__item">' + geojsonFileInfos[i].title + '</li>');
+            li.click(function() {
+                map.addGeojsonFileToMap(i);
+            });
+            $('#map-toolbar-geojson-list').append(li);
+        }
+        
     }
     
     /* ==== Init  ==== */
@@ -301,4 +321,12 @@ var createWebSocket = function(path) {
 
 var getMapRoomData = function() {
     return window.mapRoom;
+}
+
+var GEOJSON_FILES = [
+    {"varName": "seattleBoundaries", "title": "Seattle Boundaries", "description": "A file showing the boundaries of the city of Seattle.", "source": "https://github.com/openseattle/"}
+]
+
+var getGeojsonFileInfos = function() {
+    return GEOJSON_FILES;
 }

@@ -2,6 +2,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
+import json
 
 
 DEFAULT_LATITUDE = -122.3321
@@ -122,8 +123,10 @@ class GeoJsonFile(models.Model):
 
     description = models.TextField()
 
-    file = models.FileField(
-        upload_to='geo-json/'
+    geojson_file = models.TextField(
+        default=None,
+        blank=True,
+        null=True,
     )
 
     timestamp = models.DateTimeField(
@@ -142,10 +145,14 @@ class GeoJsonFile(models.Model):
                 owner=self.owner.username,
                 title=self.title,
                 description=self.description,
-                url=self.file.url,
-                timestamp=self.timestamp,
+                geojson_file=self.geojson_file,
+                timestamp=self.timestamp.strftime('%m-%d-%Y-%H-%M-%S'),
                 fileType=self.file_type,
             )
+
+    @staticmethod
+    def get_user_available_geojson_files(user):
+        return GeoJsonFile.get_user_geojson_files(user) + GeoJsonFile.get_shared_geojson_files()
 
     @staticmethod
     def get_user_geojson_files(user):

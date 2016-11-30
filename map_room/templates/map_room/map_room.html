@@ -20,6 +20,13 @@
                 <i class="material-icons">face</i>
             </button>
             <div class="mdl-tooltip" data-mdl-for="map-toolbar-chat-toggle">Chat</div>
+
+            <button id="map-toolbar-geojson-button" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">more_vert</i>
+            </button>
+            <div class="mdl-tooltip" data-mdl-for="map-toolbar-geojson-button">GeoJson List</div>
+            <ul id="map-toolbar-geojson-list" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="map-toolbar-geojson-button">
+            </ul>
         </div>
         
         <div id="map-room-chat" class="mdl-card">
@@ -46,8 +53,15 @@
 {% block page_js %}
     <script>
         var navUserData = {{ nav_user_data }};
-        var mapRoom = {{ map_room }};
         var chatMessages = {{ chat_messages }};
+        var geojsonFileInfos = {{ geojson_files }};
+        var mapRoom = {{ map_room }};
     </script>
+
+    <!-- GeoJSON Files-->
+    <script type="text/javascript" src="{% static 'map_room/geojson/seattleBoundaries.json' %}"></script>
+
+
     <script type="text/javascript" src="{% static 'map_room/map_room.js' %}"></script>
+    }
 {% endblock %}

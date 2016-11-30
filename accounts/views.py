@@ -58,24 +58,26 @@ def profile(request):
         owner = user
         title = post['title']
         description = post['description']
-        geojsonFile = request.FILES['geojsonFile']
+        geojson_file = request.FILES['geojsonFile']
         file_type = USER_OWNED
 
-        if geojsonFile.content_type not in ['application/json', 'text/javascript']:
+        if geojson_file.content_type not in ['application/json', 'text/javascript']:
             return HttpResponseBadRequest('Bad Request: Improper file type. Accepted file extnesion are ".json" and ".js"')
         
-        if geojsonFile.size > ONE_MEGABYTE:
+        if geojson_file.size > ONE_MEGABYTE:
             return HttpResponse('Payload too large', status=413)
-
-        geo_json_file = GeoJsonFile(
+        import pdb; pdb.set_trace()
+        file_contents = geojson_file.read().decode('utf-8')
+        file_contents = file_contents.replace('"', "'")
+        geojson_file = GeoJsonFile(
                             owner=owner,
                             title=title,
                             description=description,
-                            file=geojsonFile,
+                            geojson_file=file_contents,
                             file_type=file_type,
                         )
 
-        geo_json_file.save()
+        geojson_file.save()
 
         return redirect(reverse('profile'))
 

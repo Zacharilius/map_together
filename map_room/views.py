@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django.utils.safestring import mark_safe
 import json
-from .models import ChatMessage, MapRoom
+from .models import ChatMessage, MapRoom, GeoJsonFile
 from map_together.util import generate_nav_info, generate_nav_info_for_user
 
 
@@ -53,12 +53,15 @@ def map_room(request, map_room=None):
     if map_room is None:
         # TODO: auto create map room.
         raise("Why is this none")
+    
     map_room, created = MapRoom.objects.get_or_create(label=map_room)
     chat_messages = ChatMessage.get_recent_messages(map_room)
+    geojson_files = GeoJsonFile.get_user_available_geojson_files(user)
     
     return render(request, 'map_room/map_room.html', {
         'nav_data': generate_nav_info(user),
         'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-        'map_room': mark_safe(json.dumps(map_room.format_map_room())),
         'chat_messages': mark_safe(json.dumps(chat_messages)),
-        })
+        'geojson_files': mark_safe(json.dumps(geojson_files)),
+        'map_room': mark_safe(json.dumps(map_room.format_map_room())),
+    })
