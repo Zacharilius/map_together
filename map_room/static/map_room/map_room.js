@@ -131,10 +131,33 @@ var MapRoom = function() {
 
     /* ==== Leaflet GeoJSON ==== */
     this.addGeojsonFileToMap = function(geoJsonIndex) {
-        geoJsonIndex = 0;
         var geojsonVarName = getGeojsonFileInfos()[geoJsonIndex]['varName'];
-        L.geoJSON(window[geojsonVarName]).addTo(mapRoom);
-    }    
+        var geoJsonLayer = window[geojsonVarName];
+        if (!isGeoJsonLayerActive(geoJsonIndex)) {
+            var layer = L.geoJSON(geoJsonLayer).addTo(mapRoom);
+            addActiveGeoJsonLayer(geoJsonIndex, layer);
+        } else {
+            mapRoom.removeLayer(getActiveGeoJsonLayer(geoJsonIndex));
+            removeActiveGeoJsonLayer(geoJsonIndex, layer);
+        }
+    }
+
+    var activeGeoJsonLayers = {};
+    var isGeoJsonLayerActive = function(index) {
+        return activeGeoJsonLayers[index] != undefined;
+    }
+
+    var addActiveGeoJsonLayer = function(index, layer) {
+        activeGeoJsonLayers[index] = layer;
+    }
+
+    var removeActiveGeoJsonLayer = function(index, layer) {
+        delete activeGeoJsonLayers[index];
+    }
+
+    var getActiveGeoJsonLayer = function(index) {
+        return activeGeoJsonLayers[index];
+    }
     
     /* Location */
     var getGeoLocation = function() {
@@ -241,6 +264,7 @@ var ButtonBar = function(map) {
         for (let i = 0; i < geojsonFileInfos.length; i++) {
             var li = $('<li class="mdl-menu__item">' + geojsonFileInfos[i].title + '</li>');
             li.click(function() {
+                $(this).toggleClass('is-active');
                 map.addGeojsonFileToMap(i);
             });
             $('#map-toolbar-geojson-list').append(li);
