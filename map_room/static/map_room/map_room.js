@@ -191,7 +191,8 @@ var ButtonBar = function(map) {
     var map = map;
     
     this.init = function() {
-        setupDragButtonBar();
+        // Disable Dragging button bar
+        // setupDragButtonBar();
         buttonSetup();
     }
     
@@ -348,7 +349,8 @@ var getMapRoomData = function() {
 }
 
 var GEOJSON_FILES = [
-    {"varName": "seattleBoundaries", "title": "Seattle Boundaries", "description": "A file showing the boundaries of the city of Seattle.", "source": "https://github.com/openseattle/"}
+    {"varName": "seattleBoundaries", "title": "Seattle Boundaries", "description": "A file showing the boundaries of the city of Seattle.", "source": "https://github.com/openseattle/"},
+    {"varName": "seattleParkBenches", "title": "Seattle Park Benches", "description": "Park Benches in Seattle.", "source": "https://github.com/Zacharilius/zacharilius.github.io/blob/master/js/seattle_parks_rec.json"}
 ]
 
 var getGeojsonFileInfos = function() {

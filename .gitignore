@@ -11,6 +11,7 @@ venv/
 db.sqlite3
 settings_local.py
 media/
+staticfiles/
 
 # Node
 node_modules/
