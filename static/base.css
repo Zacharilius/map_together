@@ -25,9 +25,19 @@ main {
     text-transform: None
 }
 
+#nav-avatar {
+    height: 30px;
+    border-radius: 20px;
+}
+
 .nav-dropdown-arrow {
 	font-size: 12px;
     -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
         -ms-transform: rotate(90deg); /* IE 9 */
             transform: rotate(90deg);
+}
+
+/* Moves the username dropdown to the left */
+header .mdl-layout__header-row .mdl-menu__container {
+    margin-right: 40px;
 }
