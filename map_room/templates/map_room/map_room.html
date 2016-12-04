@@ -33,15 +33,15 @@
             <div class="mdl-card__title">
                 <h3>Chat</h3>
             </div>
-            <div id="map-room-message-container">
+            <div id="map-room-messages-container">
                 <!-- Populated by JS -->
             </div>
             <form class="mdl-card__supporting-text">
                     <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" maxlength="50" type="text" id="map-room-chat-input" />
+                        <input class="mdl-textfield__input" type="text" id="map-room-chat-input" />
                         <label class="mdl-textfield__label" for="map-room-chat-input">I do declare...</label>
                     </div>
-                    <button class="mdl-button mdl-js-button mdl-button--accent">
+                    <button id="map-room-submit-chat" class="mdl-button mdl-js-button mdl-button--accent">
                         Send
                     </button>
                 </div>
@@ -52,8 +52,8 @@
 
 {% block page_js %}
     <script>
-        var navUserData = {{ nav_user_data }};
-        var chatMessages = {{ chat_messages }};
+        var userInfo = {{ user_info }};
+        var chatMessageInfos = {{ chat_message_infos }};
         var geojsonFileInfos = {{ geojson_files }};
         var mapRoom = {{ map_room }};
     </script>

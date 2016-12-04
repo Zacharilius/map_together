@@ -1,5 +1,7 @@
 from channels import Group
+from channels.auth import http_session_user, channel_session_user, channel_session_user_from_http
 from channels.sessions import channel_session
+from django.utils.safestring import mark_safe
 import json
 from .models import MapRoom, ChatMessage
 
@@ -37,7 +39,7 @@ def ws_map_sync_disconnect(message, map_room):
     Group('map_room-sync-'+label).discard(message.reply_channel)
 
 
-@channel_session
+@channel_session_user_from_http
 def ws_chat_connect(message, map_room):
     print('==== ws_chat_connect ====')
 
@@ -46,7 +48,7 @@ def ws_chat_connect(message, map_room):
     message.channel_session['map_room'] = map_room.label
 
 
-@channel_session
+@channel_session_user
 def ws_chat_receive(message, map_room):
     print('==== ws_chat_receive ====')
     
@@ -55,10 +57,10 @@ def ws_chat_receive(message, map_room):
     
     data = json.loads(message['text'])
     message_text = data['messageText']
-    chat_message = ChatMessage(map_room=map_room, message=message_text)
+    chat_message = ChatMessage(owner=message.user, map_room=map_room, message=message_text)
     chat_message.save()
     
-    Group('map_room-chat-'+label).send({'text': message['text']})
+    Group('map_room-chat-'+label).send({'text': json.dumps(chat_message.format_message_info())})
 
 
 @channel_session

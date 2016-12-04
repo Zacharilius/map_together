@@ -26,7 +26,7 @@ def login(request):
         user = request.user
         return render(request, 'accounts/login.html', {
                 'nav_data': generate_nav_info(user),
-                'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+                'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
             })
 
 
@@ -35,7 +35,7 @@ def logout(request):
     django_logout(request)
     return redirect(reverse('login') + '?successful-logout', {
                 'nav_data': generate_nav_info(user),
-                'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+                'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
             })
 
 
@@ -49,7 +49,7 @@ def profile(request):
         
         return render(request, 'accounts/profile.html', {
                     'nav_data': generate_nav_info(user),
-                    'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+                    'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
                     'user_map_rooms': MapRoom.get_user_formatted_rooms(user),
                     'geo_json_files': GeoJsonFile.get_user_geojson_files(user),
                 })

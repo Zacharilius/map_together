@@ -52,7 +52,7 @@ var MapRoom = function() {
     }
     
     var sendWebSocketMessage = function(message) {
-        if (isSyncActive) {
+        if (isSyncActive && !isReadOnly()) {
             lastSyncedMapState = message;
             mapRoomWS.send(JSON.stringify(message));
         }
@@ -194,6 +194,9 @@ var ButtonBar = function(map) {
         // Disable Dragging button bar
         // setupDragButtonBar();
         buttonSetup();
+        if (isReadOnly()) {
+            setupButtonDisabledStates();
+        }
     }
     
     var isButtonBarDragInProgress = false;
@@ -272,6 +275,11 @@ var ButtonBar = function(map) {
         }
         
     }
+
+    /* Disabled State */
+    var setupButtonDisabledStates = function() {
+        $('#map-toolbar-sync-toggle').attr('disabled', true);
+    }
     
     /* ==== Init  ==== */
     this.init();
@@ -282,12 +290,16 @@ var Chat = function() {
         populateChatMessages();
         setupChat();
         setupWebSocket();
+        if (isReadOnly()) {
+            setupChatDisabledState();
+        }
     }
     
     var populateChatMessages = function() {
-        for (i = 0; i < chatMessages.length; i++) {
-            chatMessage = chatMessages[i];
-            appendNewChatMessage(chatMessage);
+        var chatInfos = getMapRoomChatInfos();
+        for (i = 0; i < chatInfos.length; i++) {
+            chatInfo = chatInfos[i];
+            appendNewChatMessage(chatInfo);
         }
     }
     
@@ -304,21 +316,38 @@ var Chat = function() {
         chatForm.addEventListener('submit', submitChatInput);
     }
     
-    var appendNewChatMessage = function(message) {
-        document.querySelector('#map-room-message-container').innerHTML +='<p>' + message + '</p>';
-        
-        /* Scroll into view */
-        var mapRoomContainer = document.querySelector('#map-room-message-container');
-        mapRoomContainer.scrollTop = mapRoomContainer.scrollHeight;
+    var appendNewChatMessage = function(chatInfo) {
+        var message = chatInfo['message'];
+        var owner = chatInfo['owner'];
+        var newMessage = $('<div class="map-room-message-container"><p><span>' + owner + ' says</span>' + message + '</p></div>');
+        if (usernameIsLoggedInUser(owner)) {
+            newMessage.addClass('map-room-user-chat-message');
+        }
+        $('#map-room-messages-container').append(newMessage);
+        scrollChatToBottomSlowly();
     }
-    
+
+    function usernameIsLoggedInUser(username) {
+        return getUserInfo()['username'] == username;
+    }
+
+    function scrollChatToBottomSlowly() {
+        var mapRoomContainer = $('#map-room-messages-container');
+        mapRoomContainer.animate({scrollTop: mapRoomContainer[0].scrollHeight}, "slow");
+    }
+
+    function scrollChatToBottom() {
+        var mapRoomContainer = $('#map-room-messages-container');
+        mapRoomContainer.scrollTop(mapRoomContainer[0].scrollHeight);
+    }
+
     var chatWS;
     var setupWebSocket = function() {
         chatWS = createWebSocket('chat');
         
         chatWS.onmessage = function(e) {
             var message = JSON.parse(e.data);
-            appendNewChatMessage(message['messageText']);
+            appendNewChatMessage(message);
         }
     }
     
@@ -333,6 +362,18 @@ var Chat = function() {
         };
         return message;
     }
+
+
+    /* Disabled State */
+    var setupChatDisabledState = function() {
+        // Input field
+        var chatInputContainer = $('#map-room-current-name-input');
+        chatInputContainer.find('input').attr('disabled', true);
+        chatInputContainer.find('label').text('Please login to chat.');
+
+        // Submit Button
+        $('#map-room-submit-chat').attr('disabled', true);
+    }
     
     /* ==== Init  ==== */
     init();
@@ -346,6 +387,19 @@ var createWebSocket = function(path) {
 
 var getMapRoomData = function() {
     return window.mapRoom;
+}
+
+var getUserInfo = function() {
+    return userInfo || {};
+}
+
+/* Only authenticated users have write access */
+var isReadOnly = function() {
+    return !getUserInfo()['isAuthenticated'];
+}
+
+var getMapRoomChatInfos = function() {
+    return window.chatMessageInfos;
 }
 
 var GEOJSON_FILES = [

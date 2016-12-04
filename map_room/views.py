@@ -18,7 +18,7 @@ def join_map_room(request):
     
     result = render(request, 'map_room/join_map_room.html', {
             'nav_data': generate_nav_info(user),
-            'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+            'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
             'all_map_rooms': mark_safe(json.dumps(all_map_rooms))
         })
     
@@ -29,7 +29,6 @@ def join_map_room(request):
 @login_required
 def create_map_room(request):
     user = request.user
-    
     map_room_name = request.POST.get('mapRoomName')
     map_room, created = MapRoom.objects.get_or_create(
                             owner=user,
@@ -49,19 +48,22 @@ def create_map_room(request):
 
 def map_room(request, map_room=None):
     user = request.user
-    
     if map_room is None:
         # TODO: auto create map room.
         raise("Why is this none")
     
     map_room, created = MapRoom.objects.get_or_create(label=map_room)
-    chat_messages = ChatMessage.get_recent_messages(map_room)
-    geojson_files = GeoJsonFile.get_user_available_geojson_files(user)
-    
+    chat_message_infos = ChatMessage.get_recent_messages_info(map_room)
+
+    if user.is_anonymous():
+        geojson_files = []
+    else:
+        geojson_files = GeoJsonFile.get_user_available_geojson_files(user)
+
     return render(request, 'map_room/map_room.html', {
         'nav_data': generate_nav_info(user),
-        'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-        'chat_messages': mark_safe(json.dumps(chat_messages)),
+        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+        'chat_message_infos': mark_safe(json.dumps(chat_message_infos)),
         'geojson_files': mark_safe(json.dumps(geojson_files)),
         'map_room': mark_safe(json.dumps(map_room.format_map_room())),
     })

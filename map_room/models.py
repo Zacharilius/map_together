@@ -75,9 +75,8 @@ class MapRoom(models.Model):
 class ChatMessage(models.Model):
     owner = models.ForeignKey(
         User,
-        default=None,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         on_delete=models.CASCADE,
     )
     
@@ -92,11 +91,19 @@ class ChatMessage(models.Model):
         default=datetime.datetime.now,
         blank=True
     )
-    
+
+    def format_message_info(self):
+        return dict(
+                owner=self.owner.username,
+                message=self.message,
+                mapRoom=self.map_room.name,
+                timestamp=self.timestamp.strftime('%m-%d-%Y-%H-%M-%S'),
+            )
+
     @staticmethod
-    def get_recent_messages(map_room):
+    def get_recent_messages_info(map_room):
         chat_messages = ChatMessage.objects.filter(map_room=map_room).order_by('timestamp')
-        return [chat_message.message for chat_message in chat_messages]
+        return [chat_message.format_message_info() for chat_message in chat_messages]
     
     def __str__(self):
         return self.message

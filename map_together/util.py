@@ -11,13 +11,16 @@ import json
 def generate_nav_info_for_user(user):
     if user.is_authenticated():
         user_info=dict(
+            isAuthenticated=True,
             username=user.username,
             firstName=user.first_name,
             lastName=user.last_name,
         )
     else:
-        user_info = None
-    return user_info,
+        user_info=dict(
+            isAuthenticated=False
+        )
+    return user_info
 
 
 

@@ -4,7 +4,7 @@
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
-      <span class="mdl-layout-title">MapTogether</span>
+      <a class="mdl-navigation__link" href="{% url 'index' %}"><span class="mdl-layout-title">MapTogether</span></a>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
           <a class="mdl-navigation__link" href="{% url 'join_map_room' %}">Join MapRoom</a>
       </nav>
@@ -14,6 +14,7 @@
         {% if nav_data.is_logged_in %}
           <button id="nav-right-dropdown" class="mdl-button mdl-js-button">
             {{ nav_data.username }}
+            <i class="material-icons nav-dropdown-arrow">play_arrow</i>
           </button>
         {% else %}
           <button id="nav-right-dropdown" class="mdl-button mdl-js-button mdl-button--icon">
@@ -22,7 +23,7 @@
         {% endif %}
       </nav>
 
-      <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+      <ul id="nav-user-dropdown" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
           for="nav-right-dropdown">
           {% if not nav_data.is_logged_in %}
             <li class="mdl-menu__item">

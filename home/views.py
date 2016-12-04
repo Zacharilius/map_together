@@ -9,5 +9,5 @@ def index(request):
     
     return render(request, 'home/home.html', {
         'nav_data': generate_nav_info(user),
-        'nav_user_data': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
     })

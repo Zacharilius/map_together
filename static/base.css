@@ -24,3 +24,10 @@ main {
 #nav-right-dropdown {
     text-transform: None
 }
+
+.nav-dropdown-arrow {
+	font-size: 12px;
+    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+        -ms-transform: rotate(90deg); /* IE 9 */
+            transform: rotate(90deg);
+}

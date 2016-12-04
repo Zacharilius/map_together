@@ -23,12 +23,12 @@ main {
 
 /* Map toolbar*/
 #map-toolbar {
-    background-color:#EEE;
+    background-color: #CCC;
     border-radius: 10%;
     padding: 2px;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
     z-index: 2;
 }
 
@@ -41,10 +41,6 @@ main {
     width: 50px;
 }
 
-#map-toolbar i {
-    color: #121212;
-}
-
 #map-toolbar-geojson-list .mdl-menu__item.is-active {
     background-color: rgba(0,0,0,.1);
 }
@@ -52,7 +48,7 @@ main {
 /* Chat */
 #map-room-chat {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     background-color: #FFFFFF;
@@ -60,7 +56,7 @@ main {
     padding: 16px;
     width: 400px;
     height: 400px;
-    z-index: 2;
+    z-index: 1;
 }
 
 #map-room-chat .mdl-card__title h3 {
@@ -71,22 +67,41 @@ main {
     display: block;
 }
 
-#map-room-chat #map-room-message-container {
-    height: 150px;
-    margin-bottom: 16px;
+#map-room-chat #map-room-messages-container {
+    height: 190px;
+    background-color: #eeeeee;
+    padding: 8px;
     overflow-y: auto;
 }
 
-#map-room-chat #map-room-message-container p {
-    padding: 4px;
+#map-room-chat .map-room-message-container span {
+    display: block;
+    font-size: 10px;
+    vertical-align: top;
+}
+
+#map-room-chat .map-room-message-container p {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 30px;
+    background-color: #A1D490;
+    color: #FFF;
     overflow-wrap: break-word;
 }
 
-#map-room-chat #map-room-message-container p:nth-child(even) {
-    background-color: #EEEEEE;
+#map-room-chat .map-room-message-container.map-room-user-chat-message p {
+    background-color: #90C3D4;
 }
 
 #map-room-chat form {
-    margin-right: 15px;
+    width: 100%;
+    padding: 0;
 }
 
+#map-room-current-name-input {
+    width: 100%;
+}
+
+#map-room-submit-chat {
+    float: right;
+}
