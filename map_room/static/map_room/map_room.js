@@ -11,6 +11,7 @@ var MapRoom = function() {
     var init = function() {
         setupMap();
         setupWebSocket();
+        setupEditCreateData();
     }
     
     this.toggleSync = function() {
@@ -157,6 +158,43 @@ var MapRoom = function() {
 
     var getActiveGeoJsonLayer = function(index) {
         return activeGeoJsonLayers[index];
+    }
+
+    /* Leaflet Draw */
+    var setupEditCreateData = function() {
+        var drawnItems = new L.FeatureGroup();
+        mapRoom.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+        draw: {
+        marker: {
+          distance: 25
+        },
+        polyline: {
+          distance: 20
+        },
+        polygon: {
+          distance: 25
+        },
+        rectangle: {},
+        circle: {}
+        },
+        edit: {
+        featureGroup: drawnItems
+        }
+        });
+
+        // mapRoom.addGuideLayer(drawnItems);
+        // mapRoom.removeGuideLayer(drawnItems);
+
+
+        mapRoom.addControl(drawControl);
+
+        mapRoom.on('draw:created', function (e) {
+            var layer = e.layer;
+            drawnItems.addLayer(layer);
+            console.log(JSON.stringify(drawnItems.toGeoJSON()));
+        });
     }
     
     /* Location */

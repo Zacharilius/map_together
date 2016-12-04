@@ -23,13 +23,30 @@ main {
 
 /* Map toolbar*/
 #map-toolbar {
-    background-color: #CCC;
-    border-radius: 10%;
-    padding: 2px;
+    background-color: #FFF;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
     z-index: 2;
+}
+
+#map-toolbar .mdl-button {
+    min-width: 26px;
+    width: 26px;
+    height: 26px;
+    line-height: normal;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#map-toolbar .mdl-button:last {
+    border-right: none;
+}
+
+#map-toolbar i {
+    font-size: 16px;
 }
 
 #map-toolbar-sync-toggle {

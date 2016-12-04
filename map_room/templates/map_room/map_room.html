@@ -3,6 +3,11 @@
 {% load staticfiles %}
 
 {% block page_css %}
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'leaflet/leaflet.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'leaflet_draw/leaflet.draw.css' %}" />
+
+    <!-- Page CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'map_room/map_room.css' %}" />
 {% endblock %}
 
@@ -11,17 +16,17 @@
         <div id="map-room-map">
         </div>
         <div id="map-toolbar" class="btn-group-vertical" role="group" aria-label="Vertical button group">
-            <button id="map-toolbar-sync-toggle" class="mdl-button mdl-js-button mdl-button--icon">
+            <button id="map-toolbar-sync-toggle" class="mdl-button mdl-js-button">
                 <i class="material-icons">check_box</i>
             </button>
             <div class="mdl-tooltip" data-mdl-for="map-toolbar-sync-toggle">Map Sync</div>
             
-            <button id="map-toolbar-chat-toggle" class="mdl-button mdl-js-button mdl-button--icon">
+            <button id="map-toolbar-chat-toggle" class="mdl-button mdl-js-button">
                 <i class="material-icons">face</i>
             </button>
             <div class="mdl-tooltip" data-mdl-for="map-toolbar-chat-toggle">Chat</div>
 
-            <button id="map-toolbar-geojson-button" class="mdl-button mdl-js-button mdl-button--icon">
+            <button id="map-toolbar-geojson-button" class="mdl-button mdl-js-button">
                 <i class="material-icons">more_vert</i>
             </button>
             <div class="mdl-tooltip" data-mdl-for="map-toolbar-geojson-button">GeoJson List</div>
@@ -62,6 +67,14 @@
     <script type="text/javascript" src="{% static 'map_room/geojson/seattleBoundaries.json' %}"></script>
     <script type="text/javascript" src="{% static 'map_room/geojson/seattleParkBenches.json' %}"></script>
 
+    <!-- Reconnecting Websocket JS -->
+    <script type="text/javascript" src="{% static 'reconnecting_websocket/reconnecting_websocket.min.js' %}"></script>
+
+    <!-- Leaflet JS -->
+    <script type="text/javascript" src="{% static 'leaflet/leaflet.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leaflet_draw/leaflet.draw.js' %}"></script>
+    <script type="text/javascript" src="{% static 'leaflet_geometryutil/leaflet.geometryutil.js' %}"></script>
+
+    <!-- Page JS -->
     <script type="text/javascript" src="{% static 'map_room/map_room.js' %}"></script>
-    }
 {% endblock %}
