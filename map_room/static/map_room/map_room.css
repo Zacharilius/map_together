@@ -85,10 +85,25 @@ main {
 }
 
 #map-room-chat #map-room-messages-container {
+    position: relative;
     height: 190px;
     background-color: #eeeeee;
     padding: 8px;
     overflow-y: auto;
+}
+
+#map-room-empty-message {
+    display: none;
+    position: absolute;
+    top: calc(50% - 20px);
+    right: 0;
+    left: 50%;
+    margin: auto;
+    text-align: center;
+    width: 50%;
+    height: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%); 
 }
 
 #map-room-chat .map-room-message-container span {

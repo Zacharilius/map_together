@@ -339,6 +339,9 @@ var Chat = function() {
             chatInfo = chatInfos[i];
             appendNewChatMessage(chatInfo);
         }
+        if (chatInfos.length == 0) {
+            $('#map-room-empty-message').show();
+        }
     }
     
     var setupChat = function() {
@@ -355,6 +358,7 @@ var Chat = function() {
     }
     
     var appendNewChatMessage = function(chatInfo) {
+        $('#map-room-empty-message').hide();
         var message = chatInfo['message'];
         var owner = chatInfo['owner'];
         var newMessage = $('<div class="map-room-message-container"><p><span>' + owner + ' says</span>' + message + '</p></div>');
