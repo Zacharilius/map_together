@@ -4,7 +4,7 @@ from channels.generic.websockets import WebsocketConsumer
 from channels.sessions import channel_session
 from django.utils.safestring import mark_safe
 import json
-from .models import MapRoom, ChatMessage
+from .models import ChatMessage, MapRoom, SHARED, USER_OWNED, GeoJsonFile
 
 
 class MapSync(WebsocketConsumer):
@@ -23,17 +23,27 @@ class MapSync(WebsocketConsumer):
     def receive(self, text, **kwargs):
         print('==== ws_map_sync_receive ====')
         
-        map_room = kwargs['map_room']
-        label = self.message.channel_session['map_room']
-        map_room = MapRoom.objects.get(label=label)
         data = json.loads(text)
-        
-        map_room.center_lng = data['mapCenter']['lng']
-        map_room.center_lat = data['mapCenter']['lat']
-        map_room.zoom_level = data['zoomLevel']
-        map_room.save()
-        
-        Group('map_room-sync-'+label).send({'text': text})
+        label = kwargs['map_room']
+        map_room = MapRoom.objects.get(label=label)
+        if data['type'] == 'mapSync':
+            map_room.center_lng = data['mapCenter']['lng']
+            map_room.center_lat = data['mapCenter']['lat']
+            map_room.zoom_level = data['zoomLevel']
+            map_room.save()
+            map_room_info = map_room.format_map_room()
+            text = dict(type='mapSync', message=data)
+            Group('map_room-sync-'+label).send({'text': json.dumps(text)})
+        elif data['type'] == 'geoJsonSync':
+            geo_json_file, created = GeoJsonFile.objects.get_or_create(owner=self.message.user, map_room=map_room)
+            geo_json_file.geoJson = data['geoJson']
+            geo_json_file.file_type = USER_OWNED
+            geo_json_file.save()
+            geo_json_file_formatted = geo_json_file.format_geojson_files()
+            text = dict(type='geoJsonSync', message=geo_json_file_formatted)
+            Group('map_room-sync-'+label).send({'text': json.dumps(text)})
+        else:
+            raise Exception('Unrecognized type')
 
 
     def disconnect(self, message, **kwargs):

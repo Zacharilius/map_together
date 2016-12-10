@@ -56,24 +56,24 @@ def profile(request):
     elif request.method == 'POST':
         post = request.POST
         owner = user
-        title = post['title']
-        description = post['description']
+        map_room_id = post['mapRoomId']
         geojson_file = request.FILES['geojsonFile']
         file_type = USER_OWNED
 
         if geojson_file.content_type not in ['application/json', 'text/javascript']:
             return HttpResponseBadRequest('Bad Request: Improper file type. Accepted file extnesion are ".json" and ".js"')
         
+
         if geojson_file.size > ONE_MEGABYTE:
             return HttpResponse('Payload too large', status=413)
-        import pdb; pdb.set_trace()
+        
+        map_room = MapRoom.objects.get(id=map_room_id)
         file_contents = geojson_file.read().decode('utf-8')
         file_contents = file_contents.replace('"', "'")
         geojson_file = GeoJsonFile(
                             owner=owner,
-                            title=title,
-                            description=description,
-                            geojson_file=file_contents,
+                            map_room=map_room,
+                            geo_json=geo_json,
                             file_type=file_type,
                         )
 

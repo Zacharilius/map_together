@@ -40,21 +40,30 @@ var MapRoom = function() {
         mapRoomWS = createWebSocket('map-sync');
         
         mapRoomWS.onmessage = function(e) {
-            var message = JSON.parse(e.data);
+            var data = JSON.parse(e.data);
+            type = data['type'];
+            message = data['message']
 
-            if (isMapInSyncWith(message)) {
-                /* Map is already sync */
-                return;
+            if (type == 'geoJsonSync') {
+                addGeoJsonToMap(message['geoJson']);
             }
-            
-            lastSyncedMapState = message;
-            onMapSyncMessage(message)
+            else if (type == 'mapSync') {
+                if (isMapInSyncWith(message)) {
+                    /* Map is already sync */
+                    return;
+                }
+                
+                lastSyncedMapState = message;
+                onMapSyncMessage(message);;
+            }
         }
     }
     
     var sendWebSocketMessage = function(message) {
         if (isSyncActive && !isReadOnly()) {
-            lastSyncedMapState = message;
+            if (message['type'] == 'mapSync') {
+                lastSyncedMapState = message;
+            }
             mapRoomWS.send(JSON.stringify(message));
         }
     }
@@ -65,13 +74,14 @@ var MapRoom = function() {
                               mapCenter['lng'] === message['mapCenter']['lng'];
         
         var mapZoom = mapRoom.getZoom();
-        var zoomInSync = mapZoom == message['zoomLevel'];
+        var zoomInSync = mapZoom === message['zoom'];
         
-        return mapCenterInSync && mapZoom;
+        return mapCenterInSync && zoomInSync;
     }
     
-    /* Updating the map fires a Leaflet Event. This function determines if the 
-       event is a valid and needs to be setn to other users in the map room.
+    /* 
+    Updating the map fires a Leaflet Event. This function determines if the 
+    event is a valid and needs to be setn to other users in the map room.
     */
     var isEventEchoFromSync = function() {
         /* If no syncs have occurred then lastSyncedMapState is empty {} */
@@ -135,12 +145,17 @@ var MapRoom = function() {
         var geojsonVarName = getGeojsonFileInfos()[geoJsonIndex]['varName'];
         var geoJsonLayer = window[geojsonVarName];
         if (!isGeoJsonLayerActive(geoJsonIndex)) {
-            var layer = L.geoJSON(geoJsonLayer).addTo(mapRoom);
+            var layer = L.geoJson(geoJsonLayer).addTo(mapRoom);
             addActiveGeoJsonLayer(geoJsonIndex, layer);
         } else {
             mapRoom.removeLayer(getActiveGeoJsonLayer(geoJsonIndex));
             removeActiveGeoJsonLayer(geoJsonIndex, layer);
         }
+    }
+
+    var addGeoJsonToMap = function(geoJsonString) {
+        var geoJson = JSON.parse(geoJsonString);
+        var layer = L.geoJson(geoJson).addTo(mapRoom);
     }
 
     var activeGeoJsonLayers = {};
@@ -166,34 +181,44 @@ var MapRoom = function() {
         mapRoom.addLayer(drawnItems);
 
         var drawControl = new L.Control.Draw({
-        draw: {
-        marker: {
-          distance: 25
-        },
-        polyline: {
-          distance: 20
-        },
-        polygon: {
-          distance: 25
-        },
-        rectangle: {},
-        circle: {}
-        },
-        edit: {
-        featureGroup: drawnItems
-        }
+            draw: {
+                marker: {
+                  distance: 25
+                },
+                polyline: {
+                  distance: 20
+                },
+                polygon: {
+                  distance: 25
+                },
+                rectangle: {},
+                circle: {}
+            },
+            edit: {
+                featureGroup: drawnItems
+            }
         });
 
-        // mapRoom.addGuideLayer(drawnItems);
-        // mapRoom.removeGuideLayer(drawnItems);
-
+        var sendAllDrawItems = function() {
+            mapGeoJson = JSON.stringify(drawnItems.toGeoJSON());
+            var mapGeoJsonMessage = createNewGeoJsonMessageFor(mapGeoJson);
+            sendWebSocketMessage(mapGeoJsonMessage);
+        }
 
         mapRoom.addControl(drawControl);
 
         mapRoom.on('draw:created', function (e) {
             var layer = e.layer;
             drawnItems.addLayer(layer);
-            console.log(JSON.stringify(drawnItems.toGeoJSON()));
+            sendAllDrawItems();
+        });
+
+        mapRoom.on('draw:deletestop', function(e) {
+            sendAllDrawItems();
+        });
+
+        mapRoom.on('draw:edited', function(e) {
+            sendAllDrawItems();
         });
     }
     
@@ -213,10 +238,19 @@ var MapRoom = function() {
     
     var createMapSyncMessageFor = function(action, e) {
         var message = {
+            'type': 'mapSync',
             'action': action,
             'mapCenter': e.target.getCenter(),
             'zoomLevel': e.target.getZoom()
         };
+        return message;
+    }
+
+    var createNewGeoJsonMessageFor = function(geoJson) {
+        var message = {
+            'type': 'geoJsonSync',
+            'geoJson': geoJson
+        }
         return message;
     }
     

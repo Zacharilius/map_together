@@ -58,7 +58,7 @@ def map_room(request, map_room=None):
     if user.is_anonymous():
         geojson_files = []
     else:
-        geojson_files = GeoJsonFile.get_user_available_geojson_files(user)
+        geojson_files = GeoJsonFile.get_user_available_geo_json_files(user)
 
     return render(request, 'map_room/map_room.html', {
         'nav_data': generate_nav_info(user),

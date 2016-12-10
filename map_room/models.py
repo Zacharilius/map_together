@@ -44,6 +44,7 @@ class MapRoom(models.Model):
     
     def format_map_room(self):
         return {
+                'id': self.id,
                 'name': self.name,
                 'label': self.label,
                 'path': self.get_absolute_url(),
@@ -126,11 +127,15 @@ class GeoJsonFile(models.Model):
         on_delete=models.CASCADE,
     )
 
-    title = models.TextField()
+    map_room = models.ForeignKey(
+        MapRoom,
+        default=None,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
 
-    description = models.TextField()
-
-    geojson_file = models.TextField(
+    geoJson = models.TextField(
         default=None,
         blank=True,
         null=True,
@@ -150,15 +155,14 @@ class GeoJsonFile(models.Model):
     def format_geojson_files(self):
         return dict(
                 owner=self.owner.username,
-                title=self.title,
-                description=self.description,
-                geojson_file=self.geojson_file,
+                mapRoomName=self.map_room.name,
+                geoJson=self.geoJson,
                 timestamp=self.timestamp.strftime('%m-%d-%Y-%H-%M-%S'),
                 fileType=self.file_type,
             )
 
     @staticmethod
-    def get_user_available_geojson_files(user):
+    def get_user_available_geo_json_files(user):
         return GeoJsonFile.get_user_geojson_files(user) + GeoJsonFile.get_shared_geojson_files()
 
     @staticmethod
@@ -175,6 +179,9 @@ class GeoJsonFile(models.Model):
     
     def __str__(self):
         if self.owner is not None:
-            return '%s\'s %s' % (self.owner.username, self.title)
+            return '%s\'s %s' % (self.owner.username, self.map_room.name)
         else:
             return self.title
+
+    class meta:
+        unique_together = (('owner', 'map_room'))
