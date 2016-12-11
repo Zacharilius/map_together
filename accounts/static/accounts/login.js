@@ -33,20 +33,18 @@ var Forms = function() {
     var setupFailedSignup = function() {
         var isFailedSignup = window.location.search.indexOf('failed-signup') != -1;
         if (isFailedSignup) {
-            showSnackBarWithMessage('Sign up Error: An error while creating your account');
+            showSnackBarWithMessage('Pick a new username, that username is already taken.');
         }
     }
     
     /* Init */
     var init = function() {
-        /* Login */
-        setupFailedLogin();
-        
-        /* Logout */
-        setupSuccessfulLogout();
-        
-        /* Signup */
-        setupFailedSignup();
+        /* Deferral: Waits for MDL to fully load before using a snackbar */
+        setTimeout(function() {
+            setupFailedLogin();
+            setupSuccessfulLogout();
+            setupFailedSignup();
+        }, 0)
     }
     
     init();

@@ -10,8 +10,8 @@
 <div class="mdl-card mdl-shadow--6dp">
 <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
   <div class="mdl-tabs__tab-bar">
-      <a href="#accounts-login-panel" class="mdl-tabs__tab is-active">Log In</a>
-      <a href="#accounts-signup-panel" class="mdl-tabs__tab">Sign Up</a>
+      <a href="#accounts-login-panel" id="accounts-login-tab" class="mdl-tabs__tab is-active">Log In</a>
+      <a href="#accounts-signup-panel" id="accounts-signup-tab" class="mdl-tabs__tab">Sign Up</a>
   </div>
 
   <div class="mdl-tabs__panel is-active" id="accounts-login-panel">
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="mdl-card__actions">
-            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Log in</button>
+            <button id="accounts-login-submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Log in</button>
         </div>
     </form>
   </div>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="mdl-card__actions">
-            <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Sign up</button>
+            <button id="accounts-signup-submit" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Sign up</button>
         </div>
     </form>
   </div>

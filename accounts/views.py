@@ -11,6 +11,32 @@ from map_room.models import GeoJsonFile, MapRoom, USER_OWNED
 from map_together.util import generate_nav_info, generate_nav_info_for_user
 
 
+@require_POST
+def signup(request):
+    post = request.POST
+    username = post['username']
+    email = post['email']
+    password = post['password']
+    f_name = post['firstName']
+    l_name = post['lastName']
+    
+    user_exists = User.objects.filter(username=username).count() != 0
+    if user_exists:
+        return redirect(reverse('login') + '?failed-signup')
+    else:
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=f_name,
+            last_name=l_name
+        )
+        # Must authenticate before using django_login
+        user = authenticate(username=username, password=password)
+        django_login(request, user)
+        return redirect(reverse('profile'))
+
+
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -80,25 +106,3 @@ def profile(request):
         geojson_file.save()
 
         return redirect(reverse('profile'))
-
-@require_POST
-def signup(request):
-    post = request.POST
-    username = post['username']
-    email = post['email']
-    password = post['password']
-    f_name = post['firstName']
-    l_name = post['lastName']
-    
-    user = User.objects.create_user(username=username,
-                                    email=email,
-                                    password=password,
-                                    first_name=f_name,
-                                    last_name=l_name)
-    # Must authenticate before using django_login
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        django_login(request, user)
-        return redirect(reverse('profile'))
-    else:
-        return redirect(reverse('login') + '?failed-signup')
