@@ -43,14 +43,15 @@ class MapRoom(models.Model):
     )
     
     def format_map_room(self):
-        return {
-                'id': self.id,
-                'name': self.name,
-                'label': self.label,
-                'path': self.get_absolute_url(),
-                'mapCenter': {'lat': self.center_lat, 'lng': self.center_lng},
-                'zoom': self.zoom_level,
-                }
+        return dict(
+                id=self.id,
+                ownerUsername=self.owner.username,
+                name=self.name,
+                label=self.label,
+                path=self.get_absolute_url(),
+                mapCenter=dict(lat=self.center_lat, lng=self.center_lng),
+                zoom=self.zoom_level,
+            )
     
     @staticmethod
     def get_formatted_rooms():

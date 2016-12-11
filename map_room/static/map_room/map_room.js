@@ -469,9 +469,17 @@ var getUserInfo = function() {
     return userInfo || {};
 }
 
+var isAuthenticated = function() {
+    return getUserInfo()['isAuthenticated'];
+}
+
 /* Only authenticated users have write access */
 var isReadOnly = function() {
-    return !getUserInfo()['isAuthenticated'];
+    return !isAuthenticated() || !isUserOwnerOfMapRoom();
+}
+
+var isUserOwnerOfMapRoom = function() {
+    return getMapRoomData()['ownerUsername'] == getUserInfo()['username'];
 }
 
 var getMapRoomChatInfos = function() {
