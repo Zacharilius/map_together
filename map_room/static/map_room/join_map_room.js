@@ -44,7 +44,7 @@ var JoinMapRoom = function() {
         for (var i = 0; i < allMapRooms.length; i++) {
             var mapRoom = allMapRooms[i];
 
-            var mapRoomLink = $('<button class="mdl-chip"></button>');
+            var mapRoomLink = $('<button class="mdl-chip map-room-link"></button>');
             
             var mapRoomButton = $('<a class="mdl-chip__text"></a>');
             mapRoomButton.attr('href', mapRoom.path);
