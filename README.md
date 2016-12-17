@@ -44,6 +44,21 @@ $ docker start my-redis
 
 ## Django Setup
 
+### Create a settings_local.py inside map_together that include:
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'mysecretpassword',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
 ```
 python3 manage.py migrate
 python3 manage.py createsuperuser
