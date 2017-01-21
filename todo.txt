@@ -1,0 +1,33 @@
+[X] Fix Join Map Room page
+[X] Upload geojson files. 
+[X] Display Profile GeoJSON files
+[X] Add profile GeoJson fiels to user.
+[x] GeoJson files can be displayed in the admin site. 
+[X] GeoJson files can be added to the map.
+[X] GepJson files can be removed from the map.
+[X] Disable Dragging map room button bar.
+[X] Add more geojson files
+[X] Make chat better
+[X] Only allow 1 person to sync position at onced. 
+[X] Gravatar - Add to chat. Add to navbar
+[X] Refactor channels consumers to use object instead of functions
+[X] Fix empty state when user has no map rooms
+[X] Fix empty state when no chat messages
+[ ] Map GeoJson
+	* Save in database
+	* Sync geoJson.c
+[ ] Noticed an error where last_synced map _center in map_room js was raising error when not properly initialized.
+[ ] Move chat_room_ws to map_room_ws
+[ ] Add tests
+[ ] Store points, line, and polygons in database
+[ ] Only allow 1 user to sync state at once
+[ ] Figure out how to correctly serve static files and media files on Heroku.
+[ ] UX-ify - Make map room sync movements from Owner when in README mode.
+[ ] Allow map room owner to prevent user from edit --> READ ONLY.
+[ ] Input custom meta data for points, lines, & polygons.
+[ ] Make several fancy maps. Like the Romania Ghoulag map.
+	* Map of Romania Gulags.
+		- http://i.imgur.com/qovhyF0.jpg
+		- Link to maps and information about each area. 
+		- When create point, can add information about the point using an editor.
+			+ Editor converts to markdown and stores in database. 
