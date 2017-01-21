@@ -1,33 +1,44 @@
 [X] Fix Join Map Room page
-[X] Upload geojson files. 
+[X] Upload geojson files.
 [X] Display Profile GeoJSON files
 [X] Add profile GeoJson fiels to user.
-[x] GeoJson files can be displayed in the admin site. 
+[x] GeoJson files can be displayed in the admin site.
 [X] GeoJson files can be added to the map.
 [X] GepJson files can be removed from the map.
 [X] Disable Dragging map room button bar.
 [X] Add more geojson files
 [X] Make chat better
-[X] Only allow 1 person to sync position at onced. 
+[X] Only allow 1 person to sync position at onced.
 [X] Gravatar - Add to chat. Add to navbar
 [X] Refactor channels consumers to use object instead of functions
 [X] Fix empty state when user has no map rooms
 [X] Fix empty state when no chat messages
-[ ] Map GeoJson
-	* Save in database
-	* Sync geoJson.c
-[ ] Noticed an error where last_synced map _center in map_room js was raising error when not properly initialized.
-[ ] Move chat_room_ws to map_room_ws
-[ ] Add tests
-[ ] Store points, line, and polygons in database
+[ ] BUG: Set session key in env variables on heroku box. Session data is being corrupted.
+[ ] BUG: have inspect open, then change window width, SOMETIMES causes it to send lots of sync request to WS server.
+[ ] BUG: On profile page, clicking download geojson button does nto download geojson file. Also, it should have geojson filename
 [ ] Only allow 1 user to sync state at once
-[ ] Figure out how to correctly serve static files and media files on Heroku.
-[ ] UX-ify - Make map room sync movements from Owner when in README mode.
-[ ] Allow map room owner to prevent user from edit --> READ ONLY.
-[ ] Input custom meta data for points, lines, & polygons.
+    * Front end only allows owner to edit json, and sync state.
+    * Web socket endpoints only allow editor for map_room owner.
+[ ] Currently, owner geojson is saved in db.
+    * On page view, add GeoJsonMap layers GeoJson
+
+[ ] Kabob Dropdown on GeoJson list
+    * Should allow you to turn on/off map_room geo_json
+    * Should have greater selection of static map_room geojson assets.
+
+[ ] Refactor chat_room_ws to map_room_ws
+[ ] Correctly serve static files and media files on Heroku.
+    * Likely will need to use aws s3 static buckets for media and static file serving
+[ ] Allow map room owner to upload geojson files
+
+[ ] Allow to add geojson files to the map_room.
+
+[ ] Store geojson feature data in geojson.
+    * right click a feature, then can add title, description, link, center_latitude, & center_longitude
 [ ] Make several fancy maps. Like the Romania Ghoulag map.
-	* Map of Romania Gulags.
+	* Map of Romanian Gulags.
 		- http://i.imgur.com/qovhyF0.jpg
-		- Link to maps and information about each area. 
+		- Link to maps and information about each area.
 		- When create point, can add information about the point using an editor.
-			+ Editor converts to markdown and stores in database. 
+			+ Editor converts to markdown and stores in database.
+        -

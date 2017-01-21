@@ -7,21 +7,21 @@ $(function() {
 
 var MapRoom = function() {
     var isSyncActive = true;
-    
+
     var init = function() {
         setupMap();
         setupWebSocket();
         setupEditCreateData();
     }
-    
+
     this.toggleSync = function() {
         isSyncActive = !isSyncActive;
     }
-    
+
     var mapState = getMapRoomData();
-    
+
     var mapRoom = L.map('map-room-map').setView([mapState['mapCenter']['lat'], mapState['mapCenter']['lng']], mapState['zoom']);
-    
+
     /* ==== Leaflet Map ==== */
     var setupMap = function() {
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -30,15 +30,15 @@ var MapRoom = function() {
             accessToken: 'pk.eyJ1IjoiemFjaGFyaWxpdXMiLCJhIjoiY2l1cHU4eGk4MDFsazNvcGh4dzRnZWU0NSJ9.pIC-kFg6gpOpA-s0to0C0g'
         }).addTo(mapRoom);
     }
-    
+
     /* ==== Leaflet Map Sync ==== */
     /* Will not sync local action while processing sync from server */
     var lastSyncedMapState = {};
     var mapRoomWS;
-    
+
     var setupWebSocket = function() {
         mapRoomWS = createWebSocket('map-sync');
-        
+
         mapRoomWS.onmessage = function(e) {
             var data = JSON.parse(e.data);
             type = data['type'];
@@ -52,13 +52,13 @@ var MapRoom = function() {
                     /* Map is already sync */
                     return;
                 }
-                
+
                 lastSyncedMapState = message;
                 onMapSyncMessage(message);;
             }
         }
     }
-    
+
     var sendWebSocketMessage = function(message) {
         if (isSyncActive && !isReadOnly()) {
             if (message['type'] == 'mapSync') {
@@ -67,20 +67,20 @@ var MapRoom = function() {
             mapRoomWS.send(JSON.stringify(message));
         }
     }
-    
+
     var isMapInSyncWith = function(message) {
         var mapCenter = mapRoom.getCenter();
         var mapCenterInSync = mapCenter['lat'] === message['mapCenter']['lat'] ||
                               mapCenter['lng'] === message['mapCenter']['lng'];
-        
+
         var mapZoom = mapRoom.getZoom();
         var zoomInSync = mapZoom === message['zoom'];
-        
+
         return mapCenterInSync && zoomInSync;
     }
-    
-    /* 
-    Updating the map fires a Leaflet Event. This function determines if the 
+
+    /*
+    Updating the map fires a Leaflet Event. This function determines if the
     event is a valid and needs to be setn to other users in the map room.
     */
     var isEventEchoFromSync = function() {
@@ -91,13 +91,13 @@ var MapRoom = function() {
         var mapCenter = mapRoom.getCenter();
         var mapCenterInSync = mapCenter['lat'] === lastSyncedMapState['mapCenter']['lat'] &&
                               mapCenter['lng'] === lastSyncedMapState['mapCenter']['lng'];
-        
+
         var mapZoom = mapRoom.getZoom();
         var zoomInSync = mapZoom == lastSyncedMapState['zoomLevel'];
-        
+
         return mapCenterInSync && mapZoom;
     }
-    
+
     var onMapSyncMessage = function(data) {
         if (isSyncActive) {
             var action = data['action'];
@@ -113,29 +113,29 @@ var MapRoom = function() {
             }
         }
     }
-    
+
     /* Pan Sync */
     mapRoom.on('moveend', function(e) {
         if (isEventEchoFromSync()) {
             return;
         }
-        
+
         sendWebSocketMessage(createMapSyncMessageFor('pan', e));
     });
-    
+
     var performPanAction = function(data) {
         mapRoom.setView(data['mapCenter']);
     }
-    
+
     /* Zoom Sync */
     mapRoom.on('zoomend', function(e) {
         if (isEventEchoFromSync()) {
             return;
         }
-        
+
         sendWebSocketMessage(createMapSyncMessageFor('zoom', e));
     })
-    
+
     var performZoomAction = function(data) {
         mapRoom.setZoom(data['zoomLevel']);
     }
@@ -199,12 +199,6 @@ var MapRoom = function() {
             }
         });
 
-        var sendAllDrawItems = function() {
-            mapGeoJson = JSON.stringify(drawnItems.toGeoJSON());
-            var mapGeoJsonMessage = createNewGeoJsonMessageFor(mapGeoJson);
-            sendWebSocketMessage(mapGeoJsonMessage);
-        }
-
         mapRoom.addControl(drawControl);
 
         mapRoom.on('draw:created', function (e) {
@@ -220,8 +214,14 @@ var MapRoom = function() {
         mapRoom.on('draw:edited', function(e) {
             sendAllDrawItems();
         });
+
+        var sendAllDrawItems = function() {
+            mapGeoJson = JSON.stringify(drawnItems.toGeoJSON());
+            var mapGeoJsonMessage = createNewGeoJsonMessageFor(mapGeoJson);
+            ssendWebSocketMessage(mapGeoJsonMessage);
+        }
     }
-    
+
     /* Location */
     var getGeoLocation = function() {
         if (navigator.geolocation) {
@@ -230,12 +230,12 @@ var MapRoom = function() {
             console.log("Geolocation is not supported by this browser.");
         }
     }
-    
+
     var updateLocation = function(position) {
-        console.log("Latitude: " + position.coords.latitude + 
-        "<br>Longitude: " + position.coords.longitude); 
+        console.log("Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude);
     }
-    
+
     var createMapSyncMessageFor = function(action, e) {
         var message = {
             'type': 'mapSync',
@@ -253,7 +253,7 @@ var MapRoom = function() {
         }
         return message;
     }
-    
+
     /* ==== Init  ==== */
     init();
 }
@@ -261,7 +261,7 @@ var MapRoom = function() {
 
 var ButtonBar = function(map) {
     var map = map;
-    
+
     this.init = function() {
         // Disable Dragging button bar
         // setupDragButtonBar();
@@ -270,39 +270,39 @@ var ButtonBar = function(map) {
             setupButtonDisabledStates();
         }
     }
-    
+
     var isButtonBarDragInProgress = false;
     var setupDragButtonBar = function() {
         var map = document.querySelector('#map-room-map');
         var mapToolbar = document.querySelector('#map-toolbar');
-        
+
         var mouseDown = function() {
             isButtonBarDragInProgress = true;
         }
-        
+
         var mouseUp = function() {
             isButtonBarDragInProgress = false;
         }
-        
+
         var mouseMove = function(e) {
             if (isButtonBarDragInProgress) {
                 mapToolbar.style.right = map.offsetWidth - e.clientX  - 25 + 'px';
                 mapToolbar.style.top = e.clientY - 25 + 'px';
             }
         }
-        
+
         mapToolbar.addEventListener('mousedown', mouseDown, false);
         window.addEventListener('mouseup', mouseUp, false);
         window.addEventListener('mousemove', mouseMove, false);
     }
-    
+
     /* ==== Buttons ==== */
     var buttonSetup = function() {
         setupSyncToggleButton();
         setupChatToggleButton();
         setupGeojsonFiles();
     }
-    
+
     var setupSyncToggleButton = function() {
         var clickSyncToggleButton = function() {
             var thisIcon = $(this).find('i');
@@ -313,24 +313,24 @@ var ButtonBar = function(map) {
             }
             map.toggleSync();
         }
-        
+
         syncToggle = document.querySelector('#map-toolbar-sync-toggle');
         syncToggle.addEventListener('click', clickSyncToggleButton);
     }
-    
+
     var setupChatToggleButton = function() {
         var clickChatToggleButton = function() {
             var mapRoomChat = document.querySelector('#map-room-chat');
-            
+
             /* Position chat below the Map toolbar */
             var mapToolbar = document.querySelector('#map-toolbar')
             mapToolbarBoundingRect = mapToolbar.getBoundingClientRect();
             mapRoomChat.style.top = (mapToolbarBoundingRect['top'] + mapToolbarBoundingRect['height']) + "px";
             mapRoomChat.style.right = (document.body.offsetWidth - mapToolbarBoundingRect['left'] - mapToolbarBoundingRect['width']) + "px";
-            
+
             mapRoomChat.classList.toggle('is-visible');
         }
-        
+
         var chatToggleButton = document.querySelector('#map-toolbar-chat-toggle');
         chatToggleButton.addEventListener('click', clickChatToggleButton);
     }
@@ -345,14 +345,14 @@ var ButtonBar = function(map) {
             });
             $('#map-toolbar-geojson-list').append(li);
         }
-        
+
     }
 
     /* Disabled State */
     var setupButtonDisabledStates = function() {
         $('#map-toolbar-sync-toggle').attr('disabled', true);
     }
-    
+
     /* ==== Init  ==== */
     this.init();
 }
@@ -366,7 +366,7 @@ var Chat = function() {
             setupChatDisabledState();
         }
     }
-    
+
     var populateChatMessages = function() {
         var chatInfos = getMapRoomChatInfos();
         for (i = 0; i < chatInfos.length; i++) {
@@ -377,20 +377,20 @@ var Chat = function() {
             $('#map-room-empty-message').show();
         }
     }
-    
+
     var setupChat = function() {
         var submitChatInput = function(e) {
             var chatInput = document.querySelector('#map-room-chat-input');
             sendWebSocketMessage(chatInput.value);
             chatInput.value = ''
-            
+
             e.preventDefault();
         }
-        
+
         var chatForm = document.querySelector('#map-room-chat form');
         chatForm.addEventListener('submit', submitChatInput);
     }
-    
+
     var appendNewChatMessage = function(chatInfo) {
         $('#map-room-empty-message').hide();
         var message = chatInfo['message'];
@@ -420,17 +420,17 @@ var Chat = function() {
     var chatWS;
     var setupWebSocket = function() {
         chatWS = createWebSocket('chat');
-        
+
         chatWS.onmessage = function(e) {
             var message = JSON.parse(e.data);
             appendNewChatMessage(message);
         }
     }
-    
+
     var sendWebSocketMessage = function(messageText) {
         chatWS.send(JSON.stringify(createChatMessage(messageText)));
     }
-    
+
     var createChatMessage = function(messageText) {
         var message = {
             'type': 'chat',
@@ -450,7 +450,7 @@ var Chat = function() {
         // Submit Button
         $('#map-room-submit-chat').attr('disabled', true);
     }
-    
+
     /* ==== Init  ==== */
     init();
 }

@@ -18,8 +18,8 @@ import string
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 SECRET_KEY = os.environ.get("SECRET_KEY", "".join(random.choice(string.printable) for i in range(40)))
+
 DEBUG = os.environ.get("DEBUG", False)
 
 # Application definition
@@ -32,10 +32,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    
+
     # 3rd Party Apps
     'channels',
-    
+
     # Project Apps
     'home',
     'map_room',

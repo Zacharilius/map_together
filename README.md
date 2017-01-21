@@ -2,11 +2,11 @@
 A Diago site that allows users to chat and create maps in real time.
 
 # Environment Setup
-Install 
+Install
 
 * Postgres 9.6
 * Docker for Mac
-* Python 3.5
+* Python 3.6
 
 Add PATH to postgresql
 `$ export PATH=/usr/local/Cellar/postgresql/9.6.1bin/:$PATH`
@@ -25,7 +25,7 @@ $ pip install -r requirements.txt
 $ docker run -p 5432:5432 --name my-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres:9.6
 ```
 
-#### Restart 
+#### Restart
 
 ```
 $ docker start my-postgres
@@ -36,7 +36,7 @@ $ docker start my-postgres
 $ docker run -p 6379:6379 --name my-redis redis:3.2
 ```
 
-#### Restart 
+#### Restart
 
 ```
 $ docker start my-redis
@@ -57,6 +57,11 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+SECRET_KEY = "dJG\x0c{\\XFk~%^H@$%<Rnn\n*J']+iT*3$z%ky0`OL\\"  # Or some random sequence fo 40 characters
+
+DEBUG = True
+
 ```
 
 ```
