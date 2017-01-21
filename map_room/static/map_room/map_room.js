@@ -218,7 +218,7 @@ var MapRoom = function() {
         var sendAllDrawItems = function() {
             mapGeoJson = JSON.stringify(drawnItems.toGeoJSON());
             var mapGeoJsonMessage = createNewGeoJsonMessageFor(mapGeoJson);
-            ssendWebSocketMessage(mapGeoJsonMessage);
+            sendWebSocketMessage(mapGeoJsonMessage);
         }
     }
 

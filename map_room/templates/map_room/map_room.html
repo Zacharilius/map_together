@@ -4,8 +4,8 @@
 
 {% block page_css %}
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'leaflet/leaflet.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'leaflet_draw/leaflet.draw.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/leaflet/dist/leaflet.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/leaflet-draw/dist/leaflet.draw.css' %}" />
 
     <!-- Page CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'map_room/map_room.css' %}" />
@@ -20,7 +20,7 @@
                 <i class="material-icons">check_box</i>
             </button>
             <div class="mdl-tooltip" data-mdl-for="map-toolbar-sync-toggle">Map Sync</div>
-            
+
             <button id="map-toolbar-chat-toggle" class="mdl-button mdl-js-button">
                 <i class="material-icons">face</i>
             </button>
@@ -33,7 +33,7 @@
             <ul id="map-toolbar-geojson-list" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="map-toolbar-geojson-button">
             </ul>
         </div>
-        
+
         <div id="map-room-chat" class="mdl-card">
             <div class="mdl-card__title">
                 <h3>Chat</h3>
@@ -69,12 +69,11 @@
     <script type="text/javascript" src="{% static 'map_room/geojson/seattleParkBenches.json' %}"></script>
 
     <!-- Reconnecting Websocket JS -->
-    <script type="text/javascript" src="{% static 'reconnecting_websocket/reconnecting_websocket.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/reconnectingWebsocket/reconnecting-websocket.min.js' %}"></script>
 
     <!-- Leaflet JS -->
-    <script type="text/javascript" src="{% static 'leaflet/leaflet.js' %}"></script>
-    <script type="text/javascript" src="{% static 'leaflet_draw/leaflet.draw.js' %}"></script>
-    <script type="text/javascript" src="{% static 'leaflet_geometryutil/leaflet.geometryutil.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/leaflet/dist/leaflet.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/leaflet-draw/dist/leaflet.draw.js' %}"></script>
 
     <!-- Page JS -->
     <script type="text/javascript" src="{% static 'map_room/map_room.js' %}"></script>

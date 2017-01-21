@@ -1,0 +1,27 @@
+{
+  "name": "map_together",
+  "homepage": "https://github.com/Zacharilius/map_together",
+  "authors": [
+    "Zacharilius <zabensley@gmail.com>"
+  ],
+  "description": "A site for creating and sharing maps.",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/bower_components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "material-design-lite": "^1.3.0",
+    "leaflet-draw": "^0.4.9",
+    "font-roboto": "^0.0.2",
+    "jquery": "^3.1.1",
+    "material-design-icons-dist": "^1.1.0",
+    "reconnectingWebsocket": "^1.0.0"
+  }
+}

@@ -11,49 +11,49 @@
     <link rel="icon" href="{% static 'images/favicon.ico' %}" />
 
     <title>MapTogether</title>
-    
+
     <!-- Fonts & Icons -->
-    <link rel="stylesheet" type="text/css" href="{% static 'roboto/roboto.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'material_icons/material_icons.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/font-roboto/dist/styles/roboto.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/material-design-icons-dist/material-icons.css' %}" />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'mdl/material.min.css' %}" />
-    
+    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/material-design-lite/material.min.css' %}" />
+
     <!-- Global CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
-    
+
     <!-- Page CSS -->
     {% block page_css %}
-      
+
     {% endblock %}
   </head>
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color--grey-100">
         {% include 'navbar.html' %}
-    
+
         <main class="mdl-layout__content">
             {% block content %}
-    
+
             {% endblock %}
         </main>
 
     </div>
-    
+
     <!-- Snackbar -->
     <div id="map-together-show-snackbar" class="mdl-js-snackbar mdl-snackbar">
         <div class="mdl-snackbar__text"></div>
         <button class="mdl-snackbar__action" type="button"></button>
     </div>
-    
+
     <!-- MDL & JQuery JS -->
-    <script type="text/javascript" src="{% static 'jquery/jquery-3.1.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'mdl/material.min.js' %}"></script>
-    
+    <script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bower_components/material-design-lite/material.min.js' %}"></script>
+
     <!-- Page JS -->
     {% block page_js %}
-      
+
     {% endblock %}
-    
+
     <div id="csrf-token" style="display: none;">{% csrf_token %}</div>
   </body>
 </html>
