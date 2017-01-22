@@ -17,31 +17,31 @@ class MapRoom(models.Model):
         null=True,
         on_delete=models.CASCADE,
     )
-    
+
     name = models.TextField()
-    
+
     label = models.SlugField(
         unique=True
     )
-    
+
     center_lng = models.FloatField(
         default=DEFAULT_LATITUDE,
         blank=False,
         null=False,
     )
-    
+
     center_lat = models.FloatField(
         default=DEFAULT_LONGITUDE,
         blank=False,
         null=False,
     )
-    
+
     zoom_level = models.IntegerField(
         default=DEFAULT_ZOOM,
         blank=False,
         null=False,
     )
-    
+
     def format_map_room(self):
         return dict(
                 id=self.id,
@@ -52,22 +52,22 @@ class MapRoom(models.Model):
                 mapCenter=dict(lat=self.center_lat, lng=self.center_lng),
                 zoom=self.zoom_level,
             )
-    
+
     @staticmethod
     def get_formatted_rooms():
         map_rooms = MapRoom.objects.all()
-        
+
         map_rooms_list = []
         for map_room in map_rooms:
             map_rooms_list.append(map_room.format_map_room())
-        
+
         return map_rooms_list
-    
+
     @staticmethod
     def get_user_formatted_rooms(user):
         user_map_rooms = MapRoom.objects.filter(owner=user)
         return [m.format_map_room() for m in user_map_rooms]
-    
+
     def get_absolute_url(self):
         return reverse('map_room', kwargs={'map_room': self.label})
 
@@ -81,14 +81,14 @@ class ChatMessage(models.Model):
         null=False,
         on_delete=models.CASCADE,
     )
-    
+
     message = models.TextField()
-    
+
     map_room = models.ForeignKey(
         MapRoom,
         on_delete=models.CASCADE,
     )
-    
+
     timestamp = models.DateTimeField(
         default=datetime.datetime.now,
         blank=True
@@ -106,7 +106,7 @@ class ChatMessage(models.Model):
     def get_recent_messages_info(map_room):
         chat_messages = ChatMessage.objects.filter(map_room=map_room).order_by('timestamp')
         return [chat_message.format_message_info() for chat_message in chat_messages]
-    
+
     def __str__(self):
         return self.message
 
@@ -163,6 +163,12 @@ class GeoJsonFile(models.Model):
             )
 
     @staticmethod
+    def get_map_room_geo_json_files(map_room):
+        all_files = GeoJsonFile.objects.filter(map_room=map_room).select_related('owner')
+        all_files_formatted = [file.format_geojson_files() for file in all_files]
+        return all_files_formatted
+
+    @staticmethod
     def get_user_available_geo_json_files(user):
         return GeoJsonFile.get_user_geojson_files(user) + GeoJsonFile.get_shared_geojson_files()
 
@@ -177,7 +183,7 @@ class GeoJsonFile(models.Model):
         all_files = GeoJsonFile.objects.filter(file_type=SHARED).select_related('owner')
         all_files_formatted = [file.format_geojson_files() for file in all_files]
         return all_files_formatted
-    
+
     def __str__(self):
         if self.owner is not None:
             return '%s\'s %s' % (self.owner.username, self.map_room.name)

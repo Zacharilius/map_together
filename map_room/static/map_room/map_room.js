@@ -7,11 +7,35 @@ $(function() {
 
 var MapRoom = function() {
     var isSyncActive = true;
+    var readOnlyGeoJsonLayer = '';
 
     var init = function() {
+        if (isReadOnly()) {
+            setupReadOnlyView();
+        } else {
+            setupMapOwnerView();
+        }
+
+    }
+
+    var setupMapOwnerView = function () {
         setupMap();
         setupWebSocket();
-        setupEditCreateData();
+        setupLeafletDraw();
+    }
+
+    var setupReadOnlyView = function () {
+        setupMap();
+        setupWebSocket();
+        setupReadOnlyGeoJson();
+    }
+
+    var setupReadOnlyGeoJson = function() {
+        var geoJsonFileInfos = window.geojsonFileInfos;
+        for (var i in geoJsonFileInfos) {
+            var geoJsonString = geoJsonFileInfos[i]['geoJson']
+            addGeoJsonToMap(geoJsonString);
+        }
     }
 
     this.toggleSync = function() {
@@ -40,23 +64,31 @@ var MapRoom = function() {
         mapRoomWS = createWebSocket('map-sync');
 
         mapRoomWS.onmessage = function(e) {
+            // Do not sync changes if user is the map room owner because
+            // they are already in sync.
+            if (isMapRoomOwner()) {
+                return;
+            }
+
             var data = JSON.parse(e.data);
-            type = data['type'];
-            message = data['message']
+            var type = data['type'];
+            var message = data['message']
 
             if (type == 'geoJsonSync') {
                 addGeoJsonToMap(message['geoJson']);
             }
             else if (type == 'mapSync') {
-                if (isMapInSyncWith(message)) {
-                    /* Map is already sync */
-                    return;
-                }
-
-                lastSyncedMapState = message;
                 onMapSyncMessage(message);;
             }
         }
+    }
+
+    var addGeoJsonToMap = function(geoJsonString) {
+        if (readOnlyGeoJsonLayer != '') {
+            readOnlyGeoJsonLayer.clearLayers();
+        }
+        var geoJson = JSON.parse(geoJsonString);
+        readOnlyGeoJsonLayer = L.geoJson(geoJson).addTo(mapRoom);
     }
 
     var sendWebSocketMessage = function(message) {
@@ -98,15 +130,22 @@ var MapRoom = function() {
         return mapCenterInSync && mapZoom;
     }
 
-    var onMapSyncMessage = function(data) {
+    var onMapSyncMessage = function(message) {
+        if (isMapInSyncWith(message)) {
+            /* Map is already sync */
+            return;
+        }
+
+        lastSyncedMapState = message;
+
         if (isSyncActive) {
-            var action = data['action'];
+            var action = message['action'];
             switch(action) {
                 case 'pan':
-                    performPanAction(data);
+                    performPanAction(message);
                     break;
                 case 'zoom':
-                    performZoomAction(data);
+                    performZoomAction(message);
                     break;
                 default:
                     console.warn('Unrecognized action: ' + action);
@@ -140,7 +179,9 @@ var MapRoom = function() {
         mapRoom.setZoom(data['zoomLevel']);
     }
 
-    /* ==== Leaflet GeoJSON ==== */
+    /* ==== Leaflet Library GeoJSON ==== */
+    /* GeoJSON files that are served from the static file server because of
+       their large size */
     this.addGeojsonFileToMap = function(geoJsonIndex) {
         var geojsonVarName = getGeojsonFileInfos()[geoJsonIndex]['varName'];
         var geoJsonLayer = window[geojsonVarName];
@@ -151,11 +192,6 @@ var MapRoom = function() {
             mapRoom.removeLayer(getActiveGeoJsonLayer(geoJsonIndex));
             removeActiveGeoJsonLayer(geoJsonIndex, layer);
         }
-    }
-
-    var addGeoJsonToMap = function(geoJsonString) {
-        var geoJson = JSON.parse(geoJsonString);
-        var layer = L.geoJson(geoJson).addTo(mapRoom);
     }
 
     var activeGeoJsonLayers = {};
@@ -176,9 +212,9 @@ var MapRoom = function() {
     }
 
     /* Leaflet Draw */
-    var setupEditCreateData = function() {
-        var drawnItems = new L.FeatureGroup();
-        mapRoom.addLayer(drawnItems);
+    var setupLeafletDraw = function() {
+        var editableLayers = new L.FeatureGroup(convertInitGeoJsonToLayers());
+        editableLayers.addTo(mapRoom)
 
         var drawControl = new L.Control.Draw({
             draw: {
@@ -192,10 +228,10 @@ var MapRoom = function() {
                   distance: 25
                 },
                 rectangle: {},
-                circle: {}
+                circle: false
             },
             edit: {
-                featureGroup: drawnItems
+                featureGroup: editableLayers
             }
         });
 
@@ -203,7 +239,7 @@ var MapRoom = function() {
 
         mapRoom.on('draw:created', function (e) {
             var layer = e.layer;
-            drawnItems.addLayer(layer);
+            editableLayers.addLayer(layer);
             sendAllDrawItems();
         });
 
@@ -216,10 +252,24 @@ var MapRoom = function() {
         });
 
         var sendAllDrawItems = function() {
-            mapGeoJson = JSON.stringify(drawnItems.toGeoJSON());
+            mapGeoJson = JSON.stringify(editableLayers.toGeoJSON());
             var mapGeoJsonMessage = createNewGeoJsonMessageFor(mapGeoJson);
             sendWebSocketMessage(mapGeoJsonMessage);
         }
+    }
+
+    var convertInitGeoJsonToLayers = function() {
+        var geoJsonFileInfos = window.geojsonFileInfos;
+        var layers = []
+        for (var i in geoJsonFileInfos) {
+            var geoJsonString = geoJsonFileInfos[i]['geoJson']
+            var geoJson = JSON.parse(geoJsonString);
+            var layerGroup = L.geoJson(geoJson);
+            for (var j in layerGroup.getLayers()) {
+                layers.push(layerGroup.getLayers()[j]);
+            }
+        }
+        return layers;
     }
 
     /* Location */
@@ -475,10 +525,10 @@ var isAuthenticated = function() {
 
 /* Only authenticated users have write access */
 var isReadOnly = function() {
-    return !isAuthenticated() || !isUserOwnerOfMapRoom();
+    return !isAuthenticated() || !isMapRoomOwner();
 }
 
-var isUserOwnerOfMapRoom = function() {
+var isMapRoomOwner = function() {
     return getMapRoomData()['ownerUsername'] == getUserInfo()['username'];
 }
 
@@ -491,6 +541,7 @@ var GEOJSON_FILES = [
     {"varName": "seattleParkBenches", "title": "Seattle Park Benches", "description": "Park Benches in Seattle.", "source": "https://github.com/Zacharilius/zacharilius.github.io/blob/master/js/seattle_parks_rec.json"}
 ]
 
+// FIXME: MAKE THIS BETTER IT IS UNCLEAR WHETHER ITS SERVING FROM STATIC OR DB.
 var getGeojsonFileInfos = function() {
     return GEOJSON_FILES;
 }

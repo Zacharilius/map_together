@@ -12,8 +12,6 @@ class MapSync(WebsocketConsumer):
     channel_session_user = True
 
     def connect(self, message, **kwargs):
-        print('==== ws_map_sync_connect ====')
-
         map_room = kwargs['map_room']
         map_room = MapRoom.objects.get(label=map_room)
         Group('map_room-sync-' + map_room.label).add(message.reply_channel)
@@ -21,11 +19,13 @@ class MapSync(WebsocketConsumer):
 
 
     def receive(self, text, **kwargs):
-        print('==== ws_map_sync_receive ====')
-        
         data = json.loads(text)
         label = kwargs['map_room']
         map_room = MapRoom.objects.get(label=label)
+        # Authenticate: Only map room owners to
+        if self.message.user != map_room.owner:
+            return
+
         if data['type'] == 'mapSync':
             map_room.center_lng = data['mapCenter']['lng']
             map_room.center_lat = data['mapCenter']['lat']
@@ -47,8 +47,6 @@ class MapSync(WebsocketConsumer):
 
 
     def disconnect(self, message, **kwargs):
-        print('==== ws_map_sync_disconnect ====')
-        
         label = message.channel_session['map_room']
         Group('map_room-sync-'+label).discard(message.reply_channel)
 
@@ -74,13 +72,13 @@ class Chat(WebsocketConsumer):
         message = json.loads(text)
         chat_message = ChatMessage(owner=self.message.user, map_room=map_room, message=message['messageText'])
         chat_message.save()
-        
+
         Group('map_room-chat-'+label).send({'text': json.dumps(chat_message.format_message_info())})
 
 
     def disconnect(self, message, **kwargs):
         print('==== ws_chat_disconnect ====')
-        
+
         label = message.channel_session['map_room']
         Group('map_room-chat-'+label).discard(message.reply_channel)
 
