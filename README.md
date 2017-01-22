@@ -68,3 +68,46 @@ DEBUG = True
 python3 manage.py migrate
 python3 manage.py createsuperuser
 ```
+
+
+# Deploying
+
+## Fist time
+```
+$ brew install heroku
+# Wait for it to install
+
+$ heroku
+# Enter heroku login info
+
+```
+
+## Run locally
+```
+heroku local web
+```
+
+## Deploy First Time on New Computer
+```
+heroku login
+heroku list  # list projects
+heroku git:remote -a *app-name*  # Adds remote to git push origin
+git push heroku master
+
+```
+
+## Deploy
+```
+heroku login
+git push heroku master
+```
+
+## Bash on Heroku
+```
+heroku list  # list projects
+heroku run --app *app-name* bash
+```
+
+
+
+
