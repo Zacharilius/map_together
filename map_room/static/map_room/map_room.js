@@ -219,19 +219,24 @@ var MapRoom = function() {
         var drawControl = new L.Control.Draw({
             draw: {
                 marker: {
-                  distance: 25
+                    distance: 25
                 },
                 polyline: {
-                  distance: 20
+                    distance: 20
                 },
                 polygon: {
-                  distance: 25
+                    distance: 25,
+                    allowIntersection: false,
+                    showArea: true
                 },
                 rectangle: {},
                 circle: false
             },
             edit: {
-                featureGroup: editableLayers
+                featureGroup: editableLayers,
+                poly: {
+                    allowIntersection: false
+                }
             }
         });
 
