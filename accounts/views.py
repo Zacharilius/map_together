@@ -19,7 +19,7 @@ def signup(request):
     password = post['password']
     f_name = post['firstName']
     l_name = post['lastName']
-    
+
     user_exists = User.objects.filter(username=username).count() != 0
     if user_exists:
         return redirect(reverse('login') + '?failed-signup')
@@ -60,9 +60,9 @@ def logout(request):
     user = request.user
     django_logout(request)
     return redirect(reverse('login') + '?successful-logout', {
-                'nav_data': generate_nav_info(user),
-                'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-            })
+        'nav_data': generate_nav_info(user),
+        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+    })
 
 
 ONE_MEGABYTE = 1000000
@@ -72,13 +72,13 @@ def profile(request):
     user = request.user
 
     if request.method == 'GET':
-        
+
         return render(request, 'accounts/profile.html', {
-                    'nav_data': generate_nav_info(user),
-                    'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-                    'user_map_rooms': MapRoom.get_user_formatted_rooms(user),
-                    'geo_json_files': GeoJsonFile.get_user_geojson_files(user),
-                })
+            'nav_data': generate_nav_info(user),
+            'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+            'user_map_rooms': MapRoom.get_user_formatted_rooms(user),
+            'geo_json_files': GeoJsonFile.get_user_geojson_files(user),
+        })
     elif request.method == 'POST':
         post = request.POST
         owner = user
@@ -88,20 +88,20 @@ def profile(request):
 
         if geojson_file.content_type not in ['application/json', 'text/javascript']:
             return HttpResponseBadRequest('Bad Request: Improper file type. Accepted file extnesion are ".json" and ".js"')
-        
+
 
         if geojson_file.size > ONE_MEGABYTE:
             return HttpResponse('Payload too large', status=413)
-        
+
         map_room = MapRoom.objects.get(id=map_room_id)
         file_contents = geojson_file.read().decode('utf-8')
         file_contents = file_contents.replace('"', "'")
         geojson_file = GeoJsonFile(
-                            owner=owner,
-                            map_room=map_room,
-                            geo_json=geo_json,
-                            file_type=file_type,
-                        )
+            owner=owner,
+            map_room=map_room,
+            geo_json=geo_json,
+            file_type=file_type,
+        )
 
         geojson_file.save()
 

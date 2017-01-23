@@ -72,14 +72,14 @@
     <div class="mdl-card__supporting-text">
         <ul class="mdl-list">
             {% if geo_json_files %}
-                {% for geo_json_files in geo_json_files %}
+                {% for geo_json_file in geo_json_files %}
                     <li class="mdl-list__item mdl-list__item--three-line">
-                        <a download class="mdl-list__item-primary-content" href="{{ geo_json_files.url }}">
+                        <a class="mdl-list__item-primary-content" href="{{ geo_json_file.fileUrl }}">
                             <span class="mdl-list__item-primary-content">
                                 <i class="material-icons mdl-list__item-avatar">file_download</i>
-                                <span>{{ geo_json_files.map_room_title }}</span>
+                                <span>{{ geo_json_file.mapRoomName }}</span>
                                 <span class="mdl-list__item-text-body">
-                                    {{ geo_json_files.map_room_description }}
+                                    <!-- {{ geo_json_file.map_room_description }} -->
                                 </span>
                             </span>
                         </a>
@@ -97,6 +97,6 @@
     <script>
         var userInfo = {{ user_info }};
     </script>
-    
+
     <script type="text/javascript" src="{% static 'accounts/profile.js' %}"></script>
 {% endblock %}

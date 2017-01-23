@@ -63,3 +63,14 @@ def map_room(request, map_room=None):
         'geojson_files': mark_safe(json.dumps(geojson_files)),
         'map_room': mark_safe(json.dumps(map_room.format_map_room())),
     })
+
+@login_required
+def view_geo_json(request, geojson_file_id):
+    user = request.user
+    geojson_file = GeoJsonFile.objects.get(id=geojson_file_id)
+
+    return render(request, 'map_room/geojson.html', {
+        'nav_data': generate_nav_info(user),
+        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+        'geojson_file_info': geojson_file.format_geojson_files(),
+    })

@@ -156,6 +156,8 @@ class GeoJsonFile(models.Model):
     def format_geojson_files(self):
         return dict(
                 owner=self.owner.username,
+                fileUrl=self.get_absolute_url(),
+                mapRoomUrl=self.map_room.get_absolute_url(),
                 mapRoomName=self.map_room.name,
                 geoJson=self.geoJson,
                 timestamp=self.timestamp.strftime('%m-%d-%Y-%H-%M-%S'),
@@ -183,6 +185,9 @@ class GeoJsonFile(models.Model):
         all_files = GeoJsonFile.objects.filter(file_type=SHARED).select_related('owner')
         all_files_formatted = [file.format_geojson_files() for file in all_files]
         return all_files_formatted
+
+    def get_absolute_url(self):
+        return reverse('view_geo_json', kwargs={'geojson_file_id': self.pk})
 
     def __str__(self):
         if self.owner is not None:

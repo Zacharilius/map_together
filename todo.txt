@@ -13,11 +13,13 @@
 [X] Refactor channels consumers to use object instead of functions
 [X] Fix empty state when user has no map rooms
 [X] Fix empty state when no chat messages
-[ ] BUG: When shrink width of window, Join MapRoom disappears.
+[X] BUG: When shrink width of window, Join MapRoom disappears.
+[X] BUG: have inspect open, then change window width, SOMETIMES causes it to send lots of sync request to WS server.
 [ ] BUG: Set session key in env variables on heroku box. Session data is being corrupted.
-[ ] BUG: have inspect open, then change window width, SOMETIMES causes it to send lots of sync request to WS server.
 [ ] BUG: On profile page, clicking download geojson button does nto download geojson file. Also, it should have geojson filename
+
 [ ] Only allow 1 user to sync state at once
+    * Refactor: Finish and simplify logic.
     * Front end only allows owner to edit json, and sync state.
     * Web socket endpoints only allow editor for map_room owner.
 [ ] Currently, owner geojson is saved in db.
