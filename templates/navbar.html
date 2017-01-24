@@ -14,7 +14,6 @@
       <div class="mdl-layout-spacer"></div>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
         {% if nav_data.is_logged_in %}
-          <a class="mdl-navigation__link" href="{% url 'join_map_room' %}">Join MapRoom</a>
           <button id="nav-right-dropdown" class="mdl-button mdl-js-button">
             <img id="nav-avatar" src="{{ nav_data.gravatar_url }}" />
             {{ nav_data.username }}
