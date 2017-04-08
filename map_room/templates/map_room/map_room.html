@@ -1,14 +1,20 @@
 {% extends "base_page.html" %}
 
 {% load staticfiles %}
+{% load compress %}
 
 {% block page_css %}
     <!-- Leaflet CSS -->
+    <!-- marker-icon-2x.png appears distorted -->
     <link rel="stylesheet" type="text/css" href="{% static 'bower_components/leaflet/dist/leaflet.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/leaflet-draw/dist/leaflet.draw.css' %}" />
 
-    <!-- Page CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'map_room/map_room.css' %}" />
+    {% compress css %}
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'bower_components/leaflet-draw/dist/leaflet.draw.css' %}" />
+
+        <!-- Page CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'map_room/map_room.css' %}" />
+    {% endcompress %}
 {% endblock %}
 
 {% block content %}

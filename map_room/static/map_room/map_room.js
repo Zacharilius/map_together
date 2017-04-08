@@ -15,7 +15,6 @@ var MapRoom = function() {
         } else {
             setupMapOwnerView();
         }
-
     }
 
     var setupMapOwnerView = function () {

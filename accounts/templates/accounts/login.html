@@ -1,9 +1,12 @@
 {% extends "base_page.html" %}
 
 {% load staticfiles %}
+{% load compress %}
 
 {% block page_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'accounts/login.css' %}" />
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'accounts/login.css' %}" />
+    {% endcompress %}
 {% endblock %}
 
 {% block content %}
@@ -70,6 +73,6 @@
     <script>
         var userInfo = {{ user_info }};
     </script>
-    
+
     <script type="text/javascript" src="{% static 'accounts/login.js' %}"></script>
 {% endblock %}

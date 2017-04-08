@@ -1,9 +1,12 @@
 {% extends "base_page.html" %}
 
 {% load staticfiles %}
+{% load compress %}
 
 {% block page_css %}
+  {% compress css %}
     <link rel="stylesheet" type="text/css" href="{% static 'map_room/join_map_room.css' %}" />
+  {% endcompress %}
 {% endblock %}
 
 {% block content %}
@@ -43,6 +46,6 @@
         var userInfo = {{ user_info }};
         var allMapRooms = {{ all_map_rooms }};
     </script>
-    
+
     <script type="text/javascript" src="{% static 'map_room/join_map_room.js' %}"></script>
 {% endblock %}
