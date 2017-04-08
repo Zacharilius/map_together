@@ -35,6 +35,7 @@ INSTALLED_APPS = (
 
     # 3rd Party Apps
     'channels',
+    'compressor',
 
     # Project Apps
     'home',
@@ -101,12 +102,15 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    # other finders
+    'compressor.finders.CompressorFinder',
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
+COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', True)
 
 TEMPLATES = [
     {

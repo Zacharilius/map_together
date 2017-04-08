@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,20 +13,22 @@
 
     <title>MapTogether</title>
 
-    <!-- Fonts & Icons -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/font-roboto/dist/styles/roboto.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/material-design-icons-dist/material-icons.css' %}" />
+    {% compress css %}
+        <!-- Fonts & Icons -->
+        <link rel="stylesheet" type="text/css" href="{% static 'bower_components/font-roboto/dist/styles/roboto.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'bower_components/material-design-icons-dist/material-icons.css' %}" />
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'bower_components/material-design-lite/material.min.css' %}" />
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'bower_components/material-design-lite/material.min.css' %}" />
 
-    <!-- Global CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
+        <!-- Global CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
 
-    <!-- Page CSS -->
-    {% block page_css %}
+        <!-- Page CSS -->
+        {% block page_css %}
 
-    {% endblock %}
+        {% endblock %}
+    {% endcompress %}
   </head>
   <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-color--grey-100">
@@ -45,14 +48,16 @@
         <button class="mdl-snackbar__action" type="button"></button>
     </div>
 
-    <!-- MDL & JQuery JS -->
-    <script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'bower_components/material-design-lite/material.min.js' %}"></script>
+    {% compress js inline %}
+        <!-- MDL & JQuery JS -->
+        <script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'bower_components/material-design-lite/material.min.js' %}"></script>
 
-    <!-- Page JS -->
-    {% block page_js %}
+        <!-- Page JS -->
+        {% block page_js %}
 
-    {% endblock %}
+        {% endblock %}
+    {% endcompress %}
 
     <div id="csrf-token" style="display: none;">{% csrf_token %}</div>
   </body>

@@ -6,10 +6,14 @@ coverage==4.2
 daphne==0.15.0
 dj-database-url==0.4.1
 Django==1.9
+django-appconf==1.0.2
+django-compressor==2.1.1
 django-redis==4.6.0
 msgpack-python==0.4.8
 psycopg2==2.6.2
+rcssmin==1.0.6
 redis==2.10.5
+rjsmin==1.0.12
 selenium==3.0.2
 six==1.10.0
 Twisted==16.4.1

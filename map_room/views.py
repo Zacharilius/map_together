@@ -31,9 +31,10 @@ def create_map_room(request):
     user = request.user
     map_room_name = request.POST.get('mapRoomName')
     map_room, created = MapRoom.objects.get_or_create(
-                            owner=user,
-                            name=map_room_name,
-                            label=map_room_name)
+        owner=user,
+        name=map_room_name,
+        label=map_room_name
+    )
 
     response_data = {
         'created': created,

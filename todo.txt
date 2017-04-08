@@ -18,10 +18,22 @@
 [X] BUG: Set session key in env variables on heroku box. Session data is being corrupted.
 [X] BUG: On profile page, clicking download geojson button does nto download geojson file. Also, it should have geojson filename
 
-[ ] Only allow 1 user to sync state at once - Refactor
+[X] Only allow 1 user to sync state at once - Refactor
     * Refactor: Finish and simplify logic.
     * Front end only allows owner to edit json, and sync state.
     * Web socket endpoints only allow editor for map_room owner.
+[X] Install and setup Django Compress
+[ ] Create better splash page for MapTogether /. Have 2 gifs that show someone zooming, panning, and editing and another gif showing it being synced.
+
+[ ] Join MapRoom: Describe what  a map room is. Add more information, about Public Rooms. Who owns them...
+
+[ ] Profile: Make the page look better. Better color.
+        * Maybe kill of viewing geoJson. Or at least make the page look better.
+        * Click map_room, then Can make map room public or private, change-name
+
+[ ] Add Django All Auth: https://github.com/pennersr/django-allauth
+
+[ ] Right click Leaflet feature and be able to add Properties to the geojson.
 
 [ ] Kabob Dropdown on GeoJson list
     * Should allow you to turn on/off map_room geo_json

@@ -84,6 +84,7 @@ $ heroku
 
 ## Run locally
 ```
+heroku local worker
 heroku local web
 ```
 
