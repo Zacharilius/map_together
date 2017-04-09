@@ -24,7 +24,6 @@ class BasePage():
         return snackbar_text.text
 
 
-
 def create_test_user():
     return User.objects.create_user(
         username='test_username',

@@ -1,4 +1,38 @@
+main {
+    width: 100%;
+}
+
 .home-title-container {
-    margin: 36px auto;
+    margin: 0 auto;
+    max-width: 800px;
+    width: 100%;
     text-align: center;
+}
+
+.home-title {
+    font-size: 40px;
+    font-weight: 400;
+    margin: 12px 0 12px 0;
+}
+
+.home-subtitle {
+    font-size: 30px;
+    font-weight: 300;
+    margin: 12px 0 12px 0;
+}
+
+.home-recording-gif-container {
+    overflow: hidden;
+    height: 600px;
+}
+
+.home-recording-gif-container-left {
+  background: url('/static/home/map_room_screen_recording_left.gif') center / cover;
+}
+
+.home-recording-gif-container-right {
+  background: url('/static/home/map_room_screen_recording_right.gif') center / cover;
+}
+
+.home-recording-gif {
 }

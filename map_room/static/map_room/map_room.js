@@ -77,7 +77,7 @@ var MapRoom = function() {
                 addGeoJsonToMap(message['geoJson']);
             }
             else if (type == 'mapSync') {
-                onMapSyncMessage(message);;
+                onMapSyncMessage(message);
             }
         }
     }

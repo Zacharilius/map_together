@@ -11,10 +11,32 @@
 
 {% block content %}
     <div class="home-title-container">
-        <h1>MapTogether</h1>
-        <p>A site for mapping together with friends, colleagues, and random people on the Internet.</p>
-        <p>This site is in active development. Message me on <a href="https://github.com/zacharilius/map_together">
-        github</a> for feature requests.</p>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h1 class="home-title">MapTogether</h1>
+                <h2 class="home-subtitle">Create Map then Share</h3>
+
+                <p>A site for mapping together with friends, colleagues, and anyone
+                with an internet connection.</p>
+
+                <p>Get started by <a href="/accounts/login">creating an account</a> and
+                then <a href="/map-room/join">creating or joining</a> a map room. Your map state
+                will automatically be saved as you zoom, pan, or create points, lines, and polygons.
+                Only you can make changes to your map, however, anyone you share your map room link with
+                can visit your map room and watch you create or work on your map.</p>
+
+                <p>This site is in active development. Message me on <a href="https://github.com/zacharilius/map_together">
+                github</a> for feature requests.</p>
+            </div>
+        </div>
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--6-col home-recording-gif-container home-recording-gif-container-left">
+                <img class="home-recording-gif" src="{% static 'home/map_room_screen_recording_left.gif' %}" />
+            </div>
+            <div class="mdl-cell mdl-cell--6-col home-recording-gif-container home-recording-gif-container-right">
+                <img class="home-recording-gif" src="{% static 'home/map_room_screen_recording_right.gif' %}" />
+            </div>
+        </div>
     </div>
 {% endblock %}
 

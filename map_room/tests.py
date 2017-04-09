@@ -3,12 +3,11 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from map_together.test_util import BasePage, create_test_user
-from .models import MapRoom
+from map_room.models import MapRoom
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
 
 
 class CreateJoinMapRoomPage(BasePage):

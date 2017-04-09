@@ -97,6 +97,11 @@ git push heroku master
 
 ```
 
+# Environment Setup
+```
+brew install chromedriver
+```
+
 ## Deploy
 ```
 heroku login
