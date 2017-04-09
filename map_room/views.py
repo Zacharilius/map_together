@@ -62,7 +62,7 @@ def map_room(request, map_room=None):
         'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
         'chat_message_infos': mark_safe(json.dumps(chat_message_infos)),
         'geojson_files': mark_safe(json.dumps(geojson_files)),
-        'map_room': mark_safe(json.dumps(map_room.format_map_room())),
+        'map_room_info': mark_safe(json.dumps(map_room.format_map_room())),
     })
 
 @login_required
