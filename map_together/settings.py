@@ -110,7 +110,7 @@ STATICFILES_FINDERS = (
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', True)
+COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)  # Temporary disbled because causing production issues.
 
 TEMPLATES = [
     {
