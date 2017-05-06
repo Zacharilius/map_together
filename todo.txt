@@ -23,15 +23,17 @@
     * Front end only allows owner to edit json, and sync state.
     * Web socket endpoints only allow editor for map_room owner.
 [X] Install and setup Django Compress
-[ ] Create better splash page for MapTogether /. Have 2 gifs that show someone zooming, panning, and editing and another gif showing it being synced.
-
+[X] Create better splash page for MapTogether /. Have 2 gifs that show someone zooming, panning, and editing and another gif showing it being synced.
+[ ] Can make map_room public/private from profile page
+[ ] All public map rooms are visible to the public.
 [ ] Join MapRoom: Describe what  a map room is. Add more information, about Public Rooms. Who owns them...
-
+[ ] Add Django All Auth: https://github.com/pennersr/django-allauth
+[ ] Map Rooms are user-specific. Add /user_id/map-room-name to the url pattern
 [ ] Profile: Make the page look better. Better color.
         * Maybe kill of viewing geoJson. Or at least make the page look better.
-        * Click map_room, then Can make map room public or private, change-name
+        * Click map_room, change-name
+[ ] Add testing to ensure map_rom doesn't break.
 
-[ ] Add Django All Auth: https://github.com/pennersr/django-allauth
 
 [ ] Right click Leaflet feature and be able to add Properties to the geojson.
 
@@ -39,7 +41,7 @@
     * Should allow you to turn on/off map_room geo_json
     * Should have greater selection of static map_room geojson assets.
 
-[ ] Refactor chat_room_ws to map_room_ws
+[ ] Refactor Move chat_room_ws into map_room_ws
 [ ] Correctly serve static files and media files on Heroku.
     * Likely will need to use aws s3 static buckets for media and static file serving
 [ ] Allow map room owner to upload geojson files

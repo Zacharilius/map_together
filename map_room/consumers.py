@@ -9,14 +9,14 @@ from .models import ChatMessage, MapRoom, SHARED, USER_OWNED, GeoJsonFile
 
 class MapSync(WebsocketConsumer):
     http_user = True
-    channel_session_user = True
 
     def connect(self, message, **kwargs):
+        # Accept connection
+        message.reply_channel.send({"accept": True})
         map_room = kwargs['map_room']
         map_room = MapRoom.objects.get(label=map_room)
-        Group('map_room-sync-' + map_room.label).add(message.reply_channel)
         message.channel_session['map_room'] = map_room.label
-
+        Group('map_room-sync-' + map_room.label).add(message.reply_channel)
 
     def receive(self, text, **kwargs):
         data = json.loads(text)
@@ -53,32 +53,24 @@ class MapSync(WebsocketConsumer):
 
 class Chat(WebsocketConsumer):
     http_user = True
-    channel_session_user = True
 
     def connect(self, message, **kwargs):
-        print('==== ws_chat_connect ====')
-
+        # Accept connection
+        message.reply_channel.send({"accept": True})
         map_room = kwargs['map_room']
         map_room = MapRoom.objects.get(label=map_room)
-        Group('map_room-chat-' + map_room.label).add(message.reply_channel)
         message.channel_session['map_room'] = map_room.label
-
+        Group('map_room-chat-' + map_room.label).add(message.reply_channel)
 
     def receive(self, text, **kwargs):
-        print('==== ws_chat_receive ====')
-
         label = self.message.channel_session['map_room']
         map_room = MapRoom.objects.get(label=label)
         message = json.loads(text)
         chat_message = ChatMessage(owner=self.message.user, map_room=map_room, message=message['messageText'])
         chat_message.save()
-
         Group('map_room-chat-'+label).send({'text': json.dumps(chat_message.format_message_info())})
 
 
     def disconnect(self, message, **kwargs):
-        print('==== ws_chat_disconnect ====')
-
         label = message.channel_session['map_room']
         Group('map_room-chat-'+label).discard(message.reply_channel)
-

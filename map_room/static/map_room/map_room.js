@@ -54,6 +54,8 @@ MapRoom.prototype.toggleSync = function() {
 /* ---- Map Sync ---- */
 
 MapRoom.prototype.setupWebSocket = function() {
+    var self = this;
+
     this.mapRoomWS = createWebSocket('map-sync');
 
     this.mapRoomWS.onmessage = function(e) {
@@ -68,10 +70,11 @@ MapRoom.prototype.setupWebSocket = function() {
         var message = data['message']
 
         if (type == 'geoJsonSync') {
-            this.addGeoJsonToMap(message['geoJson']);
+            self.addGeoJsonToMap(message['geoJson']);
         }
         else if (type == 'mapSync') {
-            this.onMapSyncMessage(message);
+            console.log(this)
+            self.onMapSyncMessage(message);
         }
     }
 }
@@ -98,10 +101,10 @@ MapRoom.prototype.onMapSyncMessage = function(message) {
         var action = message['action'];
         switch(action) {
             case 'pan':
-                performPanAction(message);
+                this.performPanAction(message);
                 break;
             case 'zoom':
-                performZoomSyncAction(message);
+                this.performZoomSyncAction(message);
                 break;
             default:
                 console.warn('Unrecognized action: ' + action);
