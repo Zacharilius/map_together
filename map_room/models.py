@@ -2,6 +2,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.text import slugify
 import json
 
 
@@ -46,12 +47,17 @@ class MapRoom(models.Model):
         null=False,
     )
 
+    def save(self, *args, **kwargs):
+        self.label = slugify(self.name)
+        super().save(*args, **kwargs)
+
     def format_map_room(self):
         return dict(
                 id=self.id,
                 ownerUsername=self.owner.username,
                 name=self.name,
                 label=self.label,
+                isPublic=self.is_public,
                 path=self.get_absolute_url(),
                 mapCenter=dict(lat=self.center_lat, lng=self.center_lng),
                 zoom=self.zoom_level,

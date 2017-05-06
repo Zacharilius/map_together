@@ -33,12 +33,37 @@ def create_map_room(request):
     map_room, created = MapRoom.objects.get_or_create(
         owner=user,
         name=map_room_name,
-        label=map_room_name
     )
 
     response_data = {
         'created': created,
         'map_room_url': map_room.get_absolute_url(),
+    }
+
+    return HttpResponse(
+        mark_safe(json.dumps(response_data)),
+        content_type="application/json"
+    )
+
+
+@require_POST
+@login_required
+def update_map_room(request):
+    user = request.user
+
+    # import pdb; pdb.set_trace()
+    name = request.POST.get('mapRoomInfo[name]')
+    label = request.POST.get('mapRoomInfo[label]')
+    is_public = json.loads(request.POST.get('mapRoomInfo[isPublic]'))
+
+    map_room = MapRoom.objects.get(label=label, owner=user)
+
+    map_room.name = name
+    map_room.is_public = is_public
+    map_room.save()
+
+    response_data = {
+        'map_room': map_room.format_map_room()
     }
 
     return HttpResponse(
