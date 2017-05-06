@@ -24,6 +24,10 @@ class MapRoom(models.Model):
         unique=True
     )
 
+    is_public = models.BooleanField(
+        default=True
+    )
+
     center_lng = models.FloatField(
         default=DEFAULT_LATITUDE,
         blank=False,
