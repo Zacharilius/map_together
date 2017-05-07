@@ -1,0 +1,23 @@
+.public-room-card {
+    padding: 20px;
+}
+
+.map-room-link {
+    color: transparent;
+}
+
+.public-map-rooms-description {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    vertical-align: top;
+}
+
+.public-map-rooms-description {
+    color: rgb(66,66,66);
+}
+
+.map-room-link:hover {
+    opacity: .6;
+}

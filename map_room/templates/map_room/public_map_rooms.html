@@ -1,0 +1,37 @@
+{% extends "base_page.html" %}
+
+{% load staticfiles %}
+{% load compress %}
+
+{% block page_css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'map_room/public_map_rooms.css' %}" />
+    {% endcompress %}
+{% endblock %}
+
+{% block content %}
+<div class="mdl-card mdl-shadow--2dp public-room-card">
+    <h4>Public Map Rooms</h4>
+{% if public_map_room_infos %}
+    {% for map_room in public_map_room_infos %}
+        <span class="mdl-list__item-primary-content">
+            <a href="{{ map_room.path }}" class="map-room-link">
+                <i class="material-icons mdl-list__item-avatar">satellite</i>
+                <div class="public-map-rooms-description">
+                    <span>{{ map_room.name }}</span>
+                    <span>-</span>
+                    <span>{{ map_room.ownerUsername }}</span>
+                </div>
+            </a>
+        </span>
+    {% endfor %}
+{% else %}
+    <div>There are no public map rooms</div>
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}

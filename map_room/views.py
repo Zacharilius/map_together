@@ -9,22 +9,6 @@ from .models import ChatMessage, MapRoom, GeoJsonFile
 from map_together.util import generate_nav_info, generate_nav_info_for_user
 
 
-@login_required
-def join_map_room(request):
-    user = request.user
-
-    all_map_rooms = MapRoom.get_formatted_rooms()
-    map_room_reversed = reverse('map_room', kwargs={'map_room': None})
-
-    result = render(request, 'map_room/join_map_room.html', {
-            'nav_data': generate_nav_info(user),
-            'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-            'all_map_rooms': mark_safe(json.dumps(all_map_rooms))
-        })
-
-    return result
-
-
 @require_POST
 @login_required
 def create_map_room(request):
@@ -51,7 +35,6 @@ def create_map_room(request):
 def update_map_room(request):
     user = request.user
 
-    # import pdb; pdb.set_trace()
     name = request.POST.get('mapRoomInfo[name]')
     label = request.POST.get('mapRoomInfo[label]')
     is_public = json.loads(request.POST.get('mapRoomInfo[isPublic]'))
@@ -72,6 +55,46 @@ def update_map_room(request):
     )
 
 
+def public_map_rooms(request):
+    user = request.user
+    public_map_rooms = MapRoom.objects.filter(is_public=True);
+    public_map_room_infos = [pmr.format_map_room() for pmr in public_map_rooms]
+
+    return render(request, 'map_room/public_map_rooms.html', {
+        'nav_data': generate_nav_info(user),
+        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+        'public_map_room_infos': public_map_room_infos,
+    })
+
+
+@login_required
+def view_geo_json(request, geojson_file_id):
+    user = request.user
+    geojson_file = GeoJsonFile.objects.get(id=geojson_file_id)
+
+    return render(request, 'map_room/geojson.html', {
+        'nav_data': generate_nav_info(user),
+        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+        'geojson_file_info': geojson_file.format_geojson_files(),
+    })
+
+
+@login_required
+def join_map_room(request):
+    user = request.user
+
+    all_map_rooms = MapRoom.get_formatted_rooms()
+    map_room_reversed = reverse('map_room', kwargs={'map_room': None})
+
+    result = render(request, 'map_room/join_map_room.html', {
+            'nav_data': generate_nav_info(user),
+            'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
+            'all_map_rooms': mark_safe(json.dumps(all_map_rooms))
+        })
+
+    return result
+
+
 def map_room(request, map_room=None):
     user = request.user
     if map_room is None:
@@ -90,13 +113,3 @@ def map_room(request, map_room=None):
         'map_room_info': mark_safe(json.dumps(map_room.format_map_room())),
     })
 
-@login_required
-def view_geo_json(request, geojson_file_id):
-    user = request.user
-    geojson_file = GeoJsonFile.objects.get(id=geojson_file_id)
-
-    return render(request, 'map_room/geojson.html', {
-        'nav_data': generate_nav_info(user),
-        'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-        'geojson_file_info': geojson_file.format_geojson_files(),
-    })

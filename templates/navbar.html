@@ -28,10 +28,14 @@
 
       <ul id="nav-user-dropdown" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
           for="nav-right-dropdown">
+            <li class="mdl-menu__item">
+              <a class="mdl-menu__item" href="{% url 'public_map_rooms' %}">Public Map Rooms</a>
+            </li>
           {% if not nav_data.is_logged_in %}
             <li class="mdl-menu__item">
               <a class="mdl-menu__item" href="{% url 'login' %}">Log in</a>
             </li>
+
           {% elif nav_data.is_logged_in %}
             <li class="mdl-menu__item">
               <a id="nav-profile-button" class="mdl-menu__item" href="{% url 'profile' %}">Profile</a>
@@ -46,6 +50,7 @@
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">MapTogether</span>
     <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="{% url 'public_map_rooms' %}">Public Map Rooms</a>
       {% if not nav_data.is_logged_in %}
         <a class="mdl-navigation__link" href="{% url 'login' %}">Log in</a>
       {% elif nav_data.is_logged_in %}
