@@ -73,7 +73,6 @@ MapRoom.prototype.setupWebSocket = function() {
             self.addGeoJsonToMap(message['geoJson']);
         }
         else if (type == 'mapSync') {
-            console.log(this)
             self.onMapSyncMessage(message);
         }
     }
@@ -183,7 +182,8 @@ MapRoom.prototype.getStaticActiveGeoJsonLayer = function(index) {
 MapRoom.prototype.setupLeafletDraw = function() {
     var self = this;
     var editableLayers = new L.FeatureGroup(self.convertInitGeoJsonToLayers());
-    editableLayers.addTo(self.mapRoom)
+    editableLayers
+        .addTo(self.mapRoom)
 
     var drawControl = new L.Control.Draw({
         draw: {

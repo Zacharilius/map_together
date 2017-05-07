@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from django.utils.safestring import mark_safe
@@ -84,7 +85,6 @@ def join_map_room(request):
     user = request.user
 
     all_map_rooms = MapRoom.get_formatted_rooms()
-    map_room_reversed = reverse('map_room', kwargs={'map_room': None})
 
     result = render(request, 'map_room/join_map_room.html', {
             'nav_data': generate_nav_info(user),
@@ -95,13 +95,20 @@ def join_map_room(request):
     return result
 
 
-def map_room(request, map_room=None):
+def map_room(request, owner_id, label):
+    map_room_owner = User.objects.get(id=owner_id)
     user = request.user
-    if map_room is None:
-        # TODO: auto create map room.
-        raise("Why is this none")
 
-    map_room, created = MapRoom.objects.get_or_create(label=map_room)
+    try:
+        map_room = MapRoom.objects.get(label=label, owner=map_room_owner)
+    except MapRoom.DoesNotExist:
+        return HttpResponseNotFound()
+
+    # Only map room owners can view private map rooms
+    map_room_is_private = not map_room.is_public
+    if map_room_is_private and user != map_room.owner:
+        return HttpResponseForbidden()
+
     chat_message_infos = ChatMessage.get_recent_messages_info(map_room)
     geojson_files = GeoJsonFile.get_map_room_geo_json_files(map_room)
 

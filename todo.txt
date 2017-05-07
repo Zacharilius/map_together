@@ -24,15 +24,15 @@
     * Web socket endpoints only allow editor for map_room owner.
 [X] Install and setup Django Compress
 [X] Create better splash page for MapTogether /. Have 2 gifs that show someone zooming, panning, and editing and another gif showing it being synced.
-[ ] Can make map_room public/private from profile page
-[ ] All public map rooms are visible to the public.
-[ ] Join MapRoom: Describe what  a map room is. Add more information, about Public Rooms. Who owns them...
-[ ] Add Django All Auth: https://github.com/pennersr/django-allauth
-[ ] Map Rooms are user-specific. Add /user_id/map-room-name to the url pattern
+[X] Can make map_room public/private from profile page
+[X] All public map rooms are visible to the public.
+[X] Map Rooms are user-specific. Add /user_id/map-room-name to the url pattern
+[ ] Add testing to ensure map_rom doesn't break.
+[ ] Maybe Add Django All Auth: https://github.com/pennersr/django-allauth
 [ ] Profile: Make the page look better. Better color.
         * Maybe kill of viewing geoJson. Or at least make the page look better.
         * Click map_room, change-name
-[ ] Add testing to ensure map_rom doesn't break.
+[ ] Join MapRoom: Describe what  a map room is. Add more information, about Public Rooms. Who owns them...
 
 
 [ ] Right click Leaflet feature and be able to add Properties to the geojson.

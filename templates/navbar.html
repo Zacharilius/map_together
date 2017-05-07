@@ -28,9 +28,6 @@
 
       <ul id="nav-user-dropdown" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
           for="nav-right-dropdown">
-            <li class="mdl-menu__item">
-              <a class="mdl-menu__item" href="{% url 'public_map_rooms' %}">Public Map Rooms</a>
-            </li>
           {% if not nav_data.is_logged_in %}
             <li class="mdl-menu__item">
               <a class="mdl-menu__item" href="{% url 'login' %}">Log in</a>

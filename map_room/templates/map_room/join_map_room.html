@@ -16,25 +16,22 @@
         <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
           <div class="mdl-tabs__tab-bar">
               <a href="#map-room-current-name-input" id="map-room-new-maproom" class="mdl-tabs__tab is-active">New MapRoom</a>
-              <a href="#map-room-join-container" id="map-room-join-maproom" class="mdl-tabs__tab">Join MapRoom</a>
           </div>
 
           <div class="mdl-tabs__panel is-active mdl-grid" id="map-room-current-name-input">
-                <div class="mdl-cell mdl-cell--7-col">
-                  <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
-                      <input class="mdl-textfield__input" maxlength="50" type="text" value="room-name" id="map-room-room-name" />
-                      <label class="mdl-textfield__label" for="map-room-room-name">Map Room</label>
-                  </div>
-                </div>
-                <div class="mdl-cell mdl-cell--4-col">
-                  <button id="map-room-new-haiku-name-button" class="mdl-button mdl-js-button mdl-button--accent">New Name</button>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col">
-                    <button id="map-room-new-submit-button" class="mdl-button mdl-js-button mdl-button--primary" type="button" value="Submit">Submit</button>
-                </div>
+            <div class="mdl-cell mdl-cell--7-col">
+              <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
+                  <input class="mdl-textfield__input" maxlength="50" type="text" value="room-name" id="map-room-room-name" />
+                  <label class="mdl-textfield__label" for="map-room-room-name">Map Room</label>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col">
+              <button id="map-room-new-haiku-name-button" class="mdl-button mdl-js-button mdl-button--accent">New Name</button>
+            </div>
+            <div class="mdl-cell mdl-cell--12-col">
+                <button id="map-room-new-submit-button" class="mdl-button mdl-js-button mdl-button--primary" type="button" value="Submit">Submit</button>
+            </div>
           </div>
-          <div class="mdl-tabs__panel" id="map-room-join-container">
-            <h3>Public Rooms</h3>
         </div>
     </div>
 </div>
@@ -44,7 +41,6 @@
 {% block page_js %}
     <script>
         var userInfo = {{ user_info }};
-        var allMapRooms = {{ all_map_rooms }};
     </script>
 
     <script type="text/javascript" src="{% static 'map_room/join_map_room.js' %}"></script>

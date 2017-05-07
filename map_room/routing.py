@@ -10,8 +10,8 @@ channel_routing = [
     route('http.request', StaticFilesConsumer()),
 
     # Map Sync
-    route_class(consumers.MapSync, path=r'^/ws/map-room/room/(?:(?P<map_room>[a-zA-Z0-9_-]+))/map-sync$'),
+    route_class(consumers.MapSync, path=r'^/ws/map-room/(?P<owner_id>[\d])/(?:(?P<map_room>[a-zA-Z0-9_-]+))/map-sync$'),
 
     # Chat
-    route_class(consumers.Chat, path=r'^/ws/map-room/room/(?:(?P<map_room>[a-zA-Z0-9_-]+))/chat$'),
+    route_class(consumers.Chat, path=r'^/ws/map-room/(?P<owner_id>[\d])/(?:(?P<map_room>[a-zA-Z0-9_-]+))/chat$'),
 ]

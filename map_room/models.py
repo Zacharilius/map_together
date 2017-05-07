@@ -79,10 +79,14 @@ class MapRoom(models.Model):
         return [m.format_map_room() for m in user_map_rooms]
 
     def get_absolute_url(self):
-        return reverse('map_room', kwargs={'map_room': self.label})
+        return reverse('map_room', kwargs={'owner_id': self.owner_id, 'label': self.label})
 
     def __str__(self):
         return self.label
+
+    class meta:
+        unique_together = (('owner', 'label'))
+
 
 class ChatMessage(models.Model):
     owner = models.ForeignKey(

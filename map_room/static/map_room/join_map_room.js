@@ -1,10 +1,9 @@
 var JoinMapRoom = function() {
     var init = function() {
         setupMapRoomContainers();
-        addAllMapRooms();
         setupClickMapRoomnameGenerator();
     }
-    
+
     var setupMapRoomContainers = function() {
         /* Submit Name */
         $('#map-room-new-submit-button').click(function() {
@@ -12,7 +11,7 @@ var JoinMapRoom = function() {
             if (mapRoomName.length == 0) {
                 mapRoomName = createHaikuName();
             }
-            
+
             $.ajax({
                 url: '/map-room/create-map-room/',
                 type: 'POST',
@@ -30,41 +29,16 @@ var JoinMapRoom = function() {
             });
         });
     }
-    
-    function addAllMapRooms() {
-        function compareAllMapRooms(a,b) {
-            if (a.name < b.name)
-                return -1;
-            if (a.name > b.name)
-                return 1;
-            return 0;
-        }
-        window.allMapRooms.sort(compareAllMapRooms);
-        var allMapRooms = window.allMapRooms;
-        for (var i = 0; i < allMapRooms.length; i++) {
-            var mapRoom = allMapRooms[i];
 
-            var mapRoomLink = $('<button class="mdl-chip map-room-link"></button>');
-            
-            var mapRoomButton = $('<a class="mdl-chip__text"></a>');
-            mapRoomButton.attr('href', mapRoom.path);
-            mapRoomButton.text(mapRoom.label);
-            
-            mapRoomLink.append(mapRoomButton);
-
-            $('#map-room-join-container').append(mapRoomLink);
-        }
-    }
-    
     /* MapRoom Name Generator */
     function setupClickMapRoomnameGenerator() {
         addNewHaikuNameToContainerName();
-        
+
         document.getElementById('map-room-new-haiku-name-button').addEventListener('click', function() {
             addNewHaikuNameToContainerName();
         });
     }
-    
+
     var addNewHaikuNameToContainerName = function() {
         var newMapRoom = document.getElementById('map-room-room-name');
         newMapRoom.value = createHaikuName();
