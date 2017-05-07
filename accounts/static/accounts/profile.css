@@ -20,6 +20,35 @@
     vertical-align: top;
 }
 
+.map-room-container {
+    padding-bottom: 40px;
+}
+
+.map-room-link {
+    color: transparent;
+}
+
+.map-room-icon {
+    width: 40px;
+}
+
+.is-public-switch-container {
+    display: inline-block;
+}
+
+.is-public-switch {
+    width: 40px;
+}
+
+.mr-update-button {
+    float: right;
+}
+
+.map-room-name {
+    padding-left: 5px;
+    width: calc(100% - 50px);
+}
+
 /* File Input */
 .mdl-textfield--file .mdl-textfield__input,
 .mdl-textfield--file .mdl-textfield__label  {
