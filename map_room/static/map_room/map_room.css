@@ -1,6 +1,6 @@
 /* Map */
 /* Leaflet Map have 100% Height */
-html, body, .mdl-layout, .mdl-layout__content, .map-room-container, #map-room-map {
+html, body, .mdl-layout, .mdl-layout__content, #map-room-map-container, #map-room-map {
     width: 100%;
     height: 100%;
 }
@@ -10,14 +10,28 @@ main {
     padding-top: 0;
 }
 
-.map-room-container {
+#map-room-map-container {
     height: 100%;
     position: relative;
+}
+
+#map-room-map-container.split-screen,
+#map-room-table-container.split-screen {
+    height: 50%;
 }
 
 #map-room-map {
     z-index: 1;
     height: 100%;
+    width: 100%;
+}
+
+#map-room-table-container {
+    overflow-y: scroll;
+}
+
+#map-room-table-container #map-room-table {
+    max-height: 100%;
     width: 100%;
 }
 
@@ -103,7 +117,7 @@ main {
     width: 50%;
     height: 50%;
     -webkit-transform: translateX(-50%);
-            transform: translateX(-50%); 
+            transform: translateX(-50%);
 }
 
 #map-room-chat .map-room-message-container span {

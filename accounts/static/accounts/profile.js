@@ -4,12 +4,12 @@ $(function() {
 
 function setupMapRoomUpdate() {
    $('.mr-update-button').click(function() {
-        updateMapRoom($(this).closest('.map-room-container'));
+        updateMapRoom($(this).closest('.map-room-map-container'));
    });
 
    $('.map-room-name-input').keypress(function(e) {
         if(e.which == 13) {
-            updateMapRoom($(this).closest('.map-room-container'));
+            updateMapRoom($(this).closest('.map-room-map-container'));
         }
    });
 }

@@ -32,10 +32,17 @@
 [ ] Profile: Make the page look better. Better color.
         * Maybe kill of viewing geoJson. Or at least make the page look better.
         * Click map_room, change-name
-[ ] Join MapRoom: Describe what  a map room is. Add more information, about Public Rooms. Who owns them...
+[ ] Join MapRoom: Describe what a map room is. Add more information, about Public Rooms. Who owns them...
 
-
-[ ] Right click Leaflet feature and be able to add Properties to the geojson.
+[ ] Add properties to Leaflet Feature
+    [ ] On create feature and on load: GeoJSON Properties (title, category, color) are added to the layer. These are stored in the database
+    [ ] Defined color property is used to style the layer
+    [ ] Click feature, then select view row shows the correct table for each data type:
+        [ ] Point
+        [ ] Line
+        [ ] Polygon
+    [ ] Owner Click edit information inside table. Saved in database on defocus.
+    [ ] All new information is instantly synced to people who are viewing the map.
 
 [ ] Kabob Dropdown on GeoJson list
     * Should allow you to turn on/off map_room geo_json
@@ -48,8 +55,6 @@
 
 [ ] Allow to add geojson files to the map_room.
 
-[ ] Store geojson feature data in geojson.
-    * right click a feature, then can add title, description, link, center_latitude, & center_longitude
 [ ] Make several fancy maps. Like the Romania Ghoulag map.
 	* Map of Romanian Gulags.
 		- http://i.imgur.com/qovhyF0.jpg

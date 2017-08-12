@@ -18,14 +18,18 @@
 {% endblock %}
 
 {% block content %}
-    <div class="map-room-container">
-        <div id="map-room-map">
-        </div>
+    <div id="map-room-map-container">
+        <div id="map-room-map"></div>
         <div id="map-toolbar" class="btn-group-vertical" role="group" aria-label="Vertical button group">
             <button id="map-toolbar-sync-toggle" class="mdl-button mdl-js-button">
                 <i class="material-icons">check_box</i>
             </button>
             <div class="mdl-tooltip" data-mdl-for="map-toolbar-sync-toggle">Map Sync</div>
+
+            <button id="map-toolbar-table-toggle" class="mdl-button mdl-js-button">
+                <i class="material-icons">view_agenda</i>
+            </button>
+            <div class="mdl-tooltip" data-mdl-for="map-toolbar-table-toggle">Show table</div>
 
             <button id="map-toolbar-chat-toggle" class="mdl-button mdl-js-button">
                 <i class="material-icons">face</i>
@@ -49,16 +53,35 @@
                 <!-- Populated by JS -->
             </div>
             <form class="mdl-card__supporting-text">
-                    <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" type="text" id="map-room-chat-input" />
-                        <label class="mdl-textfield__label" for="map-room-chat-input">I do declare...</label>
-                    </div>
-                    <button id="map-room-submit-chat" class="mdl-button mdl-js-button mdl-button--accent">
-                        Send
-                    </button>
+                <div id="map-room-current-name-input" class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="map-room-chat-input" />
+                    <label class="mdl-textfield__label" for="map-room-chat-input">I do declare...</label>
                 </div>
+                <button id="map-room-submit-chat" class="mdl-button mdl-js-button mdl-button--accent">
+                    Send
+                </button>
             </form>
         </div>
+    </div>
+    <div id="map-room-table-container">
+        <table id="map-room-table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <thead>
+                <tr>
+                  <th class="mdl-data-table__cell--non-numeric">Feature</th>
+                  <th class="mdl-data-table__cell--non-numeric">Title</th>
+                  <th class="mdl-data-table__cell--non-numeric">Category</th>
+                  <th class="mdl-data-table__cell--non-numeric">Color</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td class="mdl-data-table__cell--non-numeric">Feature</td>
+                  <td class="mdl-data-table__cell--non-numeric">Title</td>
+                  <td class="mdl-data-table__cell--non-numeric">Category</td>
+                  <td class="mdl-data-table__cell--non-numeric">Color</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 {% endblock %}
 

@@ -14,6 +14,8 @@ var MapRoom = function() {
     var chat = new Chat();
 }
 
+MapRoom.prototype.defaultColor = '#3388ff';
+
 /* ---- Leaflet Map ---- */
 
 MapRoom.prototype.setupMap = function() {
@@ -181,9 +183,17 @@ MapRoom.prototype.getStaticActiveGeoJsonLayer = function(index) {
 
 MapRoom.prototype.setupLeafletDraw = function() {
     var self = this;
-    var editableLayers = new L.FeatureGroup(self.convertInitGeoJsonToLayers());
-    editableLayers
-        .addTo(self.mapRoom)
+
+    function onClick(e) {
+        var layer = e.layer;
+        var feature = layer.feature;
+        var props = feature.properties;
+        console.log(props);
+    }
+
+    var editableLayers = new L.FeatureGroup(self.convertInitGeoJsonToLayers())
+        .on('click', onClick)
+        .addTo(self.mapRoom);
 
     var drawControl = new L.Control.Draw({
         draw: {
@@ -213,6 +223,17 @@ MapRoom.prototype.setupLeafletDraw = function() {
 
     self.mapRoom.on('draw:created', function (e) {
         var layer = e.layer;
+
+        var feature = layer.feature = {};
+        feature.type = feature.type || 'Feature';
+
+        var props = feature.properties = {};
+        // TODO: Initialize with empty strings.
+        props.title = 'Test title';
+        props.color = self.defaultColor;
+        props.category = 'Test Category';
+        props.content = 'Test Content';
+
         editableLayers.addLayer(layer);
         sendAllDrawItems();
     });
@@ -260,13 +281,13 @@ MapRoom.prototype.getGeoLocation = function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(updateLocation);
     } else {
-        console.log("Geolocation is not supported by this browser.");
+        console.log('Geolocation is not supported by this browser.');
     }
 }
 
 MapRoom.prototype.updateLocation = function(position) {
-    console.log("Latitude: " + position.coords.latitude +
-    "<br>Longitude: " + position.coords.longitude);
+    console.log('Latitude: ' + position.coords.latitude +
+    '<br>Longitude: ' + position.coords.longitude);
 }
 
 
@@ -314,6 +335,7 @@ ButtonBar.prototype.setupDragButtonBar = function() {
 
 ButtonBar.prototype.buttonSetup = function() {
     this.setupSyncToggleButton();
+    this.setupTableContainerButton();
     this.setupChatToggleButton();
     this.setupGeojsonFiles();
 }
@@ -334,6 +356,19 @@ ButtonBar.prototype.setupSyncToggleButton = function() {
     syncToggle.addEventListener('click', clickSyncToggleButton);
 }
 
+ButtonBar.prototype.setupTableContainerButton = function() {
+    var self = this;
+    var clickToggleShowTableContainer = function() {
+        var mapContainer = document.querySelector('#map-room-map-container');
+        toggleClass(mapContainer, ['split-screen']);
+        var tableContainer = document.querySelector('#map-room-table-container');
+        toggleClass(tableContainer, ['split-screen']);
+    }
+
+    syncToggle = document.querySelector('#map-toolbar-table-toggle');
+    syncToggle.addEventListener('click', clickToggleShowTableContainer);
+}
+
 ButtonBar.prototype.setupChatToggleButton = function() {
     var clickChatToggleButton = function() {
         var mapRoomChat = document.querySelector('#map-room-chat');
@@ -341,8 +376,8 @@ ButtonBar.prototype.setupChatToggleButton = function() {
         /* Position chat below the Map toolbar */
         var mapToolbar = document.querySelector('#map-toolbar')
         mapToolbarBoundingRect = mapToolbar.getBoundingClientRect();
-        mapRoomChat.style.top = (mapToolbarBoundingRect['top'] + mapToolbarBoundingRect['height']) + "px";
-        mapRoomChat.style.right = (document.body.offsetWidth - mapToolbarBoundingRect['left'] - mapToolbarBoundingRect['width']) + "px";
+        mapRoomChat.style.top = (mapToolbarBoundingRect['top'] + mapToolbarBoundingRect['height']) + 'px';
+        mapRoomChat.style.right = (document.body.offsetWidth - mapToolbarBoundingRect['left'] - mapToolbarBoundingRect['width']) + 'px';
 
         mapRoomChat.classList.toggle('is-visible');
     }
@@ -426,7 +461,7 @@ Chat.prototype.usernameIsLoggedInUser = function(username) {
 
 Chat.prototype.scrollChatToBottomSlowly = function() {
     var mapRoomContainerEl = $('#map-room-messages-container');
-    mapRoomContainerEl.animate({scrollTop: mapRoomContainerEl[0].scrollHeight}, "slow");
+    mapRoomContainerEl.animate({scrollTop: mapRoomContainerEl[0].scrollHeight}, 'slow');
 }
 
 Chat.prototype.scrollChatToBottom = function() {
@@ -472,9 +507,29 @@ Chat.prototype.setupChatDisabledState = function() {
 
 /* ==== Util ==== */
 
+var toggleClass = function(element, clazz) {
+    if (hasClass(element, clazz)) {
+        removeClass(element, clazz);
+    } else {
+        addClass(element, clazz);
+    }
+}
+
+var hasClass = function(element, clazz) {
+    return element.classList.contains(clazz);
+}
+
+var addClass = function(element, clazz) {
+    element.classList.add(clazz);
+}
+
+var removeClass = function(element, clazz) {
+    element.classList.remove(clazz);
+}
+
 var createWebSocket = function(path) {
-    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    return new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/ws" + window.location.pathname + '/' + path);
+    var ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
+    return new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws' + window.location.pathname + '/' + path);
 }
 
 var getMapRoomInfo = function() {
@@ -503,8 +558,8 @@ var getMapRoomChatInfos = function() {
 }
 
 var GEOJSON_FILES = [
-    {"varName": "seattleBoundaries", "title": "Seattle Boundaries", "description": "A file showing the boundaries of the city of Seattle.", "source": "https://github.com/openseattle/"},
-    {"varName": "seattleParkBenches", "title": "Seattle Park Benches", "description": "Park Benches in Seattle.", "source": "https://github.com/Zacharilius/zacharilius.github.io/blob/master/js/seattle_parks_rec.json"}
+    {'varName': 'seattleBoundaries', 'title': 'Seattle Boundaries', 'description': 'A file showing the boundaries of the city of Seattle.', 'source': 'https://github.com/openseattle/'},
+    {'varName': 'seattleParkBenches', 'title': 'Seattle Park Benches', 'description': 'Park Benches in Seattle.', 'source': 'https://github.com/Zacharilius/zacharilius.github.io/blob/master/js/seattle_parks_rec.json'}
 ]
 
 var getStaticGeojsonFileInfos = function() {
