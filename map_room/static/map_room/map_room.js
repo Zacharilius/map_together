@@ -390,20 +390,21 @@ ButtonBar.prototype.setupGeojsonFiles = function() {
     var self = this;
     var geojsonFileInfos = getStaticGeojsonFileInfos();
     for (let i = 0; i < geojsonFileInfos.length; i++) {
-        var li = $('<li class="mdl-menu__item">' + geojsonFileInfos[i].title + '</li>');
-        li.click(function() {
-            $(this).toggleClass('is-active');
+        var li = document.createElement('li');
+        addClass(li, 'mdl-menu__item');
+        li.appendChild(document.createTextNode(geojsonFileInfos[i].title));
+        li.addEventListener('click', function() {
+            toggleClass(this, ('is-active'));
             self.mapRoom.addStaticGeojsonFileToMap(i);
         });
-        $('#map-toolbar-geojson-list').append(li);
+        document.querySelector('#map-toolbar-geojson-list').appendChild(li);
     }
-
 }
 
 /* Disabled State */
 
 ButtonBar.prototype.setupButtonDisabledStates = function() {
-    $('#map-toolbar-sync-toggle').attr('disabled', true);
+    document.querySelector('#map-toolbar-sync-toggle').setAttribute('disabled', true);
 }
 
 
@@ -425,7 +426,7 @@ Chat.prototype.populateChatMessages = function() {
         this.appendNewChatMessage(chatInfo);
     }
     if (chatInfos.length == 0) {
-        $('#map-room-empty-message').show();
+        showElement(document.querySelector('#map-room-empty-message'));
     }
 }
 
@@ -444,7 +445,7 @@ Chat.prototype.setupChat = function() {
 }
 
 Chat.prototype.appendNewChatMessage = function(chatInfo) {
-    $('#map-room-empty-message').hide();
+    hideElement(document.querySelector('#map-room-empty-message'));
     var message = chatInfo['message'];
     var owner = chatInfo['owner'];
     var newMessage = $('<div class="map-room-message-container"><p><span>' + owner + ' says</span>' + message + '</p></div>');
@@ -513,55 +514,71 @@ var toggleClass = function(element, clazz) {
     } else {
         addClass(element, clazz);
     }
-}
+};
 
 var hasClass = function(element, clazz) {
     return element.classList.contains(clazz);
-}
+};
 
 var addClass = function(element, clazz) {
     element.classList.add(clazz);
-}
+};
 
 var removeClass = function(element, clazz) {
     element.classList.remove(clazz);
-}
+};
+
+var toggleElement = function(element) {
+    if (element.style.display === 'none') {
+        showElement(element);
+    } else {
+        hideElement(element);
+    }
+};
+
+var hideElement = function(element) {
+    element.style.display = 'block';
+};
+
+var showElement = function(element) {
+    element.style.display = 'none';
+};
 
 var createWebSocket = function(path) {
     var ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
     return new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws' + window.location.pathname + '/' + path);
-}
+};
 
 var getMapRoomInfo = function() {
     return window.mapRoomInfo;
-}
+};
 
 var getUserInfo = function() {
     return userInfo || {};
-}
+};
 
 var isAuthenticated = function() {
     return getUserInfo()['isAuthenticated'];
-}
+};
 
 /* Only authenticated users have write access */
 var isReadOnly = function() {  // TODO: Encapsulate inside mapRoom
     return !isAuthenticated() || !isMapRoomOwner();
-}
+};
 
 var isMapRoomOwner = function() {
     return getMapRoomInfo()['ownerUsername'] == getUserInfo()['username'];
-}
+};
 
 var getMapRoomChatInfos = function() {
     return window.chatMessageInfos;
-}
+};
 
 var GEOJSON_FILES = [
     {'varName': 'seattleBoundaries', 'title': 'Seattle Boundaries', 'description': 'A file showing the boundaries of the city of Seattle.', 'source': 'https://github.com/openseattle/'},
     {'varName': 'seattleParkBenches', 'title': 'Seattle Park Benches', 'description': 'Park Benches in Seattle.', 'source': 'https://github.com/Zacharilius/zacharilius.github.io/blob/master/js/seattle_parks_rec.json'}
-]
+];
 
 var getStaticGeojsonFileInfos = function() {
     return GEOJSON_FILES;
-}
+};

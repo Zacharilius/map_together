@@ -7,5 +7,5 @@ urlpatterns = [
     url(r'^public-map-rooms/?$', views.public_map_rooms, name='public_map_rooms'),
     url(r'^geojson/(?P<geojson_file_id>[\d])/?$', views.view_geo_json, name='view_geo_json'),
     url(r'^join/?$', views.join_map_room, name='join_map_room'),
-    url(r'^(?P<owner_id>[\d])/(?P<label>[\w-]{1,50})/?$', views.map_room, name='map_room'),
+    url(r'^(?P<owner_id>[\d]+)/(?P<label>[\w-]+)/?$', views.map_room, name='map_room'),
 ]

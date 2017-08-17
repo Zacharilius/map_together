@@ -5,11 +5,12 @@
     <div class="mdl-layout__header-row">
       <!-- Title -->
       <a class="mdl-navigation__link" href="{% url 'index' %}"><span class="mdl-layout-title">MapTogether</span></a>
-      {% if nav_data.is_logged_in %}
         <nav class="mdl-navigation mdl-layout--large-screen-only">
-            <a class="mdl-navigation__link" href="{% url 'join_map_room' %}">Join MapRoom</a>
+          {% if nav_data.is_logged_in %}
+            <a class="mdl-navigation__link" href="{% url 'join_map_room' %}">Join Map Room</a>
+          {% endif %}
+          <a class="mdl-navigation__link" href="{% url 'public_map_rooms' %}">Public Map Rooms</a>
         </nav>
-      {% endif %}
       <!-- Add spacer, to align navigation to the right -->
       <div class="mdl-layout-spacer"></div>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
@@ -51,7 +52,8 @@
       {% if not nav_data.is_logged_in %}
         <a class="mdl-navigation__link" href="{% url 'login' %}">Log in</a>
       {% elif nav_data.is_logged_in %}
-        <a class="mdl-navigation__link" href="{% url 'join_map_room' %}">Join MapRoom</a>
+        <a class="mdl-navigation__link" href="{% url 'join_map_room' %}">Join Map Room</a>
+        <a class="mdl-navigation__link" href="{% url 'public_map_rooms' %}">Public Map Rooms</a>
         <a class="mdl-navigation__link" href="{% url 'profile' %}">Profile</a>
         <a class="mdl-navigation__link" href="{% url 'logout' %}">Log out</a>
       {% endif %}

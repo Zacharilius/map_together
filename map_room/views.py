@@ -58,8 +58,7 @@ def update_map_room(request):
 
 def public_map_rooms(request):
     user = request.user
-    public_map_rooms = MapRoom.objects.filter(is_public=True);
-    public_map_room_infos = [pmr.format_map_room() for pmr in public_map_rooms]
+    public_map_room_infos = MapRoom.get_public_formatted_map_rooms()
 
     return render(request, 'map_room/public_map_rooms.html', {
         'nav_data': generate_nav_info(user),
@@ -84,12 +83,9 @@ def view_geo_json(request, geojson_file_id):
 def join_map_room(request):
     user = request.user
 
-    all_map_rooms = MapRoom.get_formatted_rooms()
-
     result = render(request, 'map_room/join_map_room.html', {
             'nav_data': generate_nav_info(user),
             'user_info': mark_safe(json.dumps(generate_nav_info_for_user(user))),
-            'all_map_rooms': mark_safe(json.dumps(all_map_rooms))
         })
 
     return result

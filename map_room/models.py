@@ -64,8 +64,8 @@ class MapRoom(models.Model):
             )
 
     @staticmethod
-    def get_formatted_rooms():
-        map_rooms = MapRoom.objects.all()
+    def get_public_formatted_map_rooms():
+        map_rooms = MapRoom.objects.filter(is_public=True)
 
         map_rooms_list = []
         for map_room in map_rooms:

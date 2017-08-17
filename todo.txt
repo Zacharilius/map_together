@@ -27,6 +27,7 @@
 [X] Can make map_room public/private from profile page
 [X] All public map rooms are visible to the public.
 [X] Map Rooms are user-specific. Add /user_id/map-room-name to the url pattern
+[ ] Fix the public map room page.
 [ ] Add testing to ensure map_rom doesn't break.
 [ ] Maybe Add Django All Auth: https://github.com/pennersr/django-allauth
 [ ] Profile: Make the page look better. Better color.
