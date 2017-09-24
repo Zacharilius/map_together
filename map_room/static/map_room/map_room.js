@@ -1,9 +1,8 @@
 /* ==== Init ==== */
 
-$(function() {
+window.onload = function() {
     var mapRoom = new MapRoom();
-});
-
+};
 
 /* ==== MapRoom ==== */
 
@@ -12,7 +11,7 @@ var MapRoom = function() {
     this.setupMap();
     var buttonBar = new ButtonBar(this);
     var chat = new Chat();
-}
+};
 
 MapRoom.prototype.defaultColor = '#3388ff';
 
@@ -39,7 +38,7 @@ MapRoom.prototype.setupMap = function() {
     } else {
         this.setupLeafletDraw();
     }
-}
+};
 
 MapRoom.prototype.setupReadOnlyGeoJson = function() {
     var geoJsonFileInfos = window.geojsonFileInfos;
@@ -47,11 +46,11 @@ MapRoom.prototype.setupReadOnlyGeoJson = function() {
         var geoJsonString = geoJsonFileInfos[i]['geoJson']
         this.addGeoJsonToMap(geoJsonString);
     }
-}
+};
 
 MapRoom.prototype.toggleSync = function() {
     this.isSyncActive = !this.isSyncActive;
-}
+};
 
 /* ---- Map Sync ---- */
 
@@ -78,7 +77,7 @@ MapRoom.prototype.setupWebSocket = function() {
             self.onMapSyncMessage(message);
         }
     }
-}
+};
 
     var readOnlyGeoJsonLayer = '';
 
@@ -89,13 +88,13 @@ MapRoom.prototype.addGeoJsonToMap = function(geoJsonString) {
     }
     var geoJson = JSON.parse(geoJsonString);
     readOnlyGeoJsonLayer = L.geoJson(geoJson).addTo(this.mapRoom);
-}
+};
 
 MapRoom.prototype.sendWebSocketMessage = function(message) {
     if (this.isSyncActive && !isReadOnly()) {
         this.mapRoomWS.send(JSON.stringify(message));
     }
-}
+};
 
 MapRoom.prototype.onMapSyncMessage = function(message) {
     if (this.isSyncActive) {
@@ -111,29 +110,29 @@ MapRoom.prototype.onMapSyncMessage = function(message) {
                 console.warn('Unrecognized action: ' + action);
         }
     }
-}
+};
 
 MapRoom.prototype.setupPanSync = function() {
     var self = this;
     self.mapRoom.on('moveend', function(e) {
         self.sendWebSocketMessage(self.createMapSyncMessageFor('pan', e));
     });
-}
+};
 
 MapRoom.prototype.performPanAction = function(data) {
     this.mapRoom.setView(data['mapCenter']);
-}
+};
 
 MapRoom.prototype.setupZoomSync = function() {
     var self = this;
     self.mapRoom.on('zoomend', function(e) {
         self.sendWebSocketMessage(self.createMapSyncMessageFor('zoom', e));
     });
-}
+};
 
 MapRoom.prototype.performZoomSyncAction = function(data) {
     this.mapRoom.setZoom(data['zoomLevel']);
-}
+};
 
 MapRoom.prototype.createMapSyncMessageFor = function(action, e) {
     var message = {
@@ -143,7 +142,7 @@ MapRoom.prototype.createMapSyncMessageFor = function(action, e) {
         'zoomLevel': e.target.getZoom()
     };
     return message;
-}
+};
 
 /* ---- Library GeoJSON ---- */
 // GeoJSON files that are served from the static file server because of
@@ -159,25 +158,25 @@ MapRoom.prototype.addStaticGeojsonFileToMap = function(geoJsonIndex) {
         this.mapRoom.removeLayer(this.getStaticActiveGeoJsonLayer(geoJsonIndex));
         this.removeStaticActiveGeoJsonLayer(geoJsonIndex, layer);
     }
-}
+};
 
 MapRoom.prototype.activeStaticGeoJsonLayers = {};
 
 MapRoom.prototype.isStaticGeoJsonLayerActive = function(index) {
     return this.activeStaticGeoJsonLayers[index] != undefined;
-}
+};
 
 MapRoom.prototype.addStaticActiveGeoJsonLayer = function(index, layer) {
     this.activeStaticGeoJsonLayers[index] = layer;
-}
+};
 
 MapRoom.prototype.removeStaticActiveGeoJsonLayer = function(index, layer) {
     delete this.activeStaticGeoJsonLayers[index];
-}
+};
 
 MapRoom.prototype.getStaticActiveGeoJsonLayer = function(index) {
     return this.activeStaticGeoJsonLayers[index];
-}
+};
 
 /* ---- Draw ---- */
 
@@ -251,7 +250,7 @@ MapRoom.prototype.setupLeafletDraw = function() {
         var mapGeoJsonMessage = self.createNewGeoJsonMessageFor(mapGeoJson);
         self.sendWebSocketMessage(mapGeoJsonMessage);
     }
-}
+};
 
 MapRoom.prototype.convertInitGeoJsonToLayers = function() {
     var geoJsonFileInfos = window.geojsonFileInfos;
@@ -265,7 +264,7 @@ MapRoom.prototype.convertInitGeoJsonToLayers = function() {
         }
     }
     return layers;
-}
+};
 
 MapRoom.prototype.createNewGeoJsonMessageFor = function(geoJson) {
     var message = {
@@ -273,7 +272,7 @@ MapRoom.prototype.createNewGeoJsonMessageFor = function(geoJson) {
         'geoJson': geoJson
     }
     return message;
-}
+};
 
 /* ---- Location ---- */
 
@@ -283,12 +282,12 @@ MapRoom.prototype.getGeoLocation = function() {
     } else {
         console.log('Geolocation is not supported by this browser.');
     }
-}
+};
 
 MapRoom.prototype.updateLocation = function(position) {
     console.log('Latitude: ' + position.coords.latitude +
     '<br>Longitude: ' + position.coords.longitude);
-}
+};
 
 
 /* ==== ButtonBar ==== */
@@ -303,7 +302,7 @@ var ButtonBar = function(mapRoom) {
     if (isReadOnly()) {
         this.setupButtonDisabledStates();
     }
-}
+};
 
 ButtonBar.prototype.setupDragButtonBar = function() {
     var mapEl = document.querySelector('#map-room-map');
@@ -329,7 +328,7 @@ ButtonBar.prototype.setupDragButtonBar = function() {
     mapToolbar.addEventListener('mousedown', mouseDown, false);
     window.addEventListener('mouseup', mouseUp, false);
     window.addEventListener('mousemove', mouseMove, false);
-}
+};
 
 /* ---- Buttons ---- */
 
@@ -338,23 +337,23 @@ ButtonBar.prototype.buttonSetup = function() {
     this.setupTableContainerButton();
     this.setupChatToggleButton();
     this.setupGeojsonFiles();
-}
+};
 
 ButtonBar.prototype.setupSyncToggleButton = function() {
     var self = this;
     var clickSyncToggleButton = function() {
-        var thisIcon = $(this).find('i');
-        if (thisIcon.text() == 'check_box_outline_blank') {
-            thisIcon.text('check_box')
+        var thisIcon = this.querySelector('i');
+        if (thisIcon.innerText === 'check_box_outline_blank') {
+            thisIcon.innerText = 'check_box';
         } else {
-            thisIcon.text('check_box_outline_blank')
+            thisIcon.innerText = 'check_box_outline_blank';
         }
         self.mapRoom.toggleSync();
     }
 
     syncToggle = document.querySelector('#map-toolbar-sync-toggle');
     syncToggle.addEventListener('click', clickSyncToggleButton);
-}
+};
 
 ButtonBar.prototype.setupTableContainerButton = function() {
     var self = this;
@@ -367,7 +366,7 @@ ButtonBar.prototype.setupTableContainerButton = function() {
 
     syncToggle = document.querySelector('#map-toolbar-table-toggle');
     syncToggle.addEventListener('click', clickToggleShowTableContainer);
-}
+};
 
 ButtonBar.prototype.setupChatToggleButton = function() {
     var clickChatToggleButton = function() {
@@ -384,7 +383,7 @@ ButtonBar.prototype.setupChatToggleButton = function() {
 
     var chatToggleButton = document.querySelector('#map-toolbar-chat-toggle');
     chatToggleButton.addEventListener('click', clickChatToggleButton);
-}
+};
 
 ButtonBar.prototype.setupGeojsonFiles = function() {
     var self = this;
@@ -399,13 +398,12 @@ ButtonBar.prototype.setupGeojsonFiles = function() {
         });
         document.querySelector('#map-toolbar-geojson-list').appendChild(li);
     }
-}
+};
 
 /* Disabled State */
-
 ButtonBar.prototype.setupButtonDisabledStates = function() {
     document.querySelector('#map-toolbar-sync-toggle').setAttribute('disabled', true);
-}
+};
 
 
 /* ==== Chat ==== */
@@ -417,7 +415,7 @@ var Chat = function() {
     if (isReadOnly()) {
         this.setupChatDisabledState();
     }
-}
+};
 
 Chat.prototype.populateChatMessages = function() {
     var chatInfos = getMapRoomChatInfos();
@@ -425,10 +423,10 @@ Chat.prototype.populateChatMessages = function() {
         chatInfo = chatInfos[i];
         this.appendNewChatMessage(chatInfo);
     }
-    if (chatInfos.length == 0) {
+    if (chatInfos.length === 0) {
         showElement(document.querySelector('#map-room-empty-message'));
     }
-}
+};
 
 Chat.prototype.setupChat = function() {
     var self = this;
@@ -448,11 +446,23 @@ Chat.prototype.appendNewChatMessage = function(chatInfo) {
     hideElement(document.querySelector('#map-room-empty-message'));
     var message = chatInfo['message'];
     var owner = chatInfo['owner'];
-    var newMessage = $('<div class="map-room-message-container"><p><span>' + owner + ' says</span>' + message + '</p></div>');
+
+    var newMessageSpan = document.createElement('span');
+    newMessageSpan.appendChild(document.createTextNode(owner + ' says'));
+
+    var newMessageP = document.createElement('p');
+    newMessageP.appendChild(newMessageSpan);
+    newMessageP.appendChild(document.createTextNode(message));
+
+    var newMessageDiv = document.createElement('div');
+    addClass(newMessageDiv, 'map-room-message-container');
+    newMessageDiv.appendChild(newMessageP);
+
     if (this.usernameIsLoggedInUser(owner)) {
-        newMessage.addClass('map-room-user-chat-message');
+        addClass(newMessageSpan, 'map-room-user-chat-message');
     }
-    $('#map-room-messages-container').append(newMessage);
+
+    document.querySelector('#map-room-messages-container').appendChild(newMessageDiv);
     this.scrollChatToBottomSlowly();
 }
 
@@ -461,13 +471,25 @@ Chat.prototype.usernameIsLoggedInUser = function(username) {
 }
 
 Chat.prototype.scrollChatToBottomSlowly = function() {
-    var mapRoomContainerEl = $('#map-room-messages-container');
-    mapRoomContainerEl.animate({scrollTop: mapRoomContainerEl[0].scrollHeight}, 'slow');
+    var mapRoomContainerEl = document.querySelector('#map-room-messages-container');
+
+    var totalNeedsToScroll = mapRoomContainerEl.offsetHeight - mapRoomContainerEl.scrollTop;
+    var maxTime = 300;
+    var updateInterval = 50;
+    var scrollIncremOffset = Math.max(10, totalNeedsToScroll / (maxTime / updateInterval));
+
+    var animateMapContaierInterval = window.setInterval(function() {
+        mapRoomContainerEl.scrollTop += scrollIncremOffset;
+
+        if ((mapRoomContainerEl.scrollTop + mapRoomContainerEl.offsetHeight) >= mapRoomContainerEl.scrollHeight) {
+            window.clearInterval(animateMapContaierInterval);
+        }
+    }, updateInterval);
 }
 
 Chat.prototype.scrollChatToBottom = function() {
-    var mapRoomContainerEl = $('#map-room-messages-container');
-    mapRoomContainerEl.scrollTop(mapRoomContainerEl[0].scrollHeight);
+    var mapRoomContainerEl = document.querySelector('#map-room-messages-container');
+    mapRoomContainerEl.scrollTop = mapRoomContainerEl.scrollHeight;
 }
 
 Chat.prototype.createChatWebSocket = function() {
@@ -479,11 +501,11 @@ Chat.prototype.createChatWebSocket = function() {
         self.appendNewChatMessage(message);
     }
     return chatWS;
-}
+};
 
 Chat.prototype.sendWebSocketMessage = function(messageText) {
     this.chatWS.send(JSON.stringify(this.createChatMessage(messageText)));
-}
+};
 
 Chat.prototype.createChatMessage = function(messageText) {
     var message = {
@@ -492,18 +514,18 @@ Chat.prototype.createChatMessage = function(messageText) {
     };
 
     return message;
-}
+};
 
 /* Disabled State */
 Chat.prototype.setupChatDisabledState = function() {
     // Input field
-    var chatInputContainerEl = $('#map-room-current-name-input');
-    chatInputContainerEl.find('input').attr('disabled', true);
-    chatInputContainerEl.find('label').text('Please login to chat.');
+    var chatInputContainerEl = document.querySelector('#map-room-current-name-input');
+    chatInputContainerEl.querySelector('input').setAttribute('disabled', true);
+    chatInputContainerEl.querySelector('label').innerText = 'Please login to chat.';
 
     // Submit Button
-    $('#map-room-submit-chat').attr('disabled', true);
-}
+    document.querySelector('#map-room-submit-chat').setAttribute('disabled', true);
+};
 
 
 /* ==== Util ==== */
@@ -537,11 +559,15 @@ var toggleElement = function(element) {
 };
 
 var hideElement = function(element) {
-    element.style.display = 'block';
+    element.style.display = 'none';
 };
 
 var showElement = function(element) {
-    element.style.display = 'none';
+    element.style.display = 'block';
+};
+
+var hasAttr = function(element, attr) {
+    element.attributes.getNamedItem(attr) !== null;
 };
 
 var createWebSocket = function(path) {

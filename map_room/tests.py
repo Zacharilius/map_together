@@ -150,7 +150,6 @@ class TestAnonymousUserMapRoom(StaticLiveServerTestCase):
 
 # ==== GeoJson ====
 
-
 class TestCreateAndEditGeoJsonInMapRoom(StaticLiveServerTestCase):
 
     # === Point ===

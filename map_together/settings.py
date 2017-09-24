@@ -10,15 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import dj_database_url
 import os
 import random
 import string
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "".join(random.choice(string.printable) for i in range(40)))
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG", False)
 
@@ -38,9 +38,9 @@ INSTALLED_APPS = (
     'compressor',
 
     # Project Apps
+    'accounts',
     'home',
     'map_room',
-    'accounts',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -152,7 +152,6 @@ CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         "LOCATION": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        #'LOCATION': 'redis://%s:%s' % (REDIS_HOST, REDIS_PORT),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
@@ -165,7 +164,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-            #"hosts": ['redis://%s:%s' % (REDIS_HOST, REDIS_PORT)],
             "prefix": '%s::' % 'map_together',
         },
         "ROUTING": "map_room.routing.channel_routing",
